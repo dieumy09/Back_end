@@ -1,11 +1,13 @@
 package com.codegym.dao.model;
 
+import com.codegym.dao.model.audit.DateAudit;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +31,7 @@ public class User {
     public User() {
     }
 
-    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated, Set<Post> posts, Set<Role> roles) {
+    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -38,8 +40,6 @@ public class User {
         this.avatar = avatar;
         this.status = status;
         this.activated = activated;
-        this.posts = posts;
-        this.roles = roles;
     }
 
     public Long getId() {

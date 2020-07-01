@@ -18,9 +18,8 @@ public class Direction {
     public Direction() {
     }
 
-    public Direction(String name, Set<Post> posts) {
+    public Direction(String name) {
         this.name = name;
-        this.posts = posts;
     }
 
     public Long getId() {

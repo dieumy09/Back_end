@@ -21,6 +21,9 @@
     <modules>
         <module>dao</module>
         <module>webservice</module>
+        <module>configuration</module>
+        <module>service</module>
+        <module>common</module>
     </modules>
 
     <dependencies>

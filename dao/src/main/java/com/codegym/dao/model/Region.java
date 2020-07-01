@@ -18,9 +18,8 @@ public class Region {
     public Region() {
     }
 
-    public Region(String name, Set<Post> posts) {
+    public Region(String name) {
         this.name = name;
-        this.posts = posts;
     }
 
     public Long getId() {

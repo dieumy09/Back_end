@@ -1,20 +1,18 @@
 package com.codegym.dao.model;
 
+import com.codegym.dao.model.audit.DateAudit;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "comment")
-public class Comment {
+public class Comment extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String content;
-    private LocalDateTime commentDate;
-    private LocalDateTime updateDate;
     private boolean status;
 
     @OneToMany(mappedBy = "comment")
@@ -27,10 +25,8 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String content, LocalDateTime commentDate, LocalDateTime updateDate, boolean status) {
+    public Comment(String content, boolean status) {
         this.content = content;
-        this.commentDate = commentDate;
-        this.updateDate = updateDate;
         this.status = status;
     }
 
@@ -48,22 +44,6 @@ public class Comment {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public LocalDateTime getCommentDate() {
-        return commentDate;
-    }
-
-    public void setCommentDate(LocalDateTime commentDate) {
-        this.commentDate = commentDate;
-    }
-
-    public LocalDateTime getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(LocalDateTime updateDate) {
-        this.updateDate = updateDate;
     }
 
     public boolean isStatus() {

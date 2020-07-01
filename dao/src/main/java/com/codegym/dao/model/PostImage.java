@@ -1,10 +1,12 @@
 package com.codegym.dao.model;
 
+import com.codegym.dao.model.audit.DateAudit;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "post_image")
-public class PostImage {
+public class PostImage extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
