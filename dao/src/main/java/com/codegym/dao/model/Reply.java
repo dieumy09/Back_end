@@ -18,7 +18,7 @@ public class Reply extends DateAudit {
     private boolean status;
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "FK_reply_comment"))
     private Comment comment;
 
     public Reply() {

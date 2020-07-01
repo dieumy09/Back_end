@@ -19,7 +19,7 @@ public class Comment extends DateAudit {
     private Set<Reply> replies;
 
     @ManyToOne()
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_comment_post"))
     private Post post;
 
     public Comment() {

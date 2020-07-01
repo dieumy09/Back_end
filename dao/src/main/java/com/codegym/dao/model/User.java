@@ -40,7 +40,10 @@ public class User extends DateAudit {
     private Set<Post> posts;
 
     @ManyToMany
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_roles_user")),
+            inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_users_roles_role"))
+    )
     private Set<Role> roles;
 
     public User() {
