@@ -13,7 +13,7 @@ public class Post extends DateAudit {
     private Long id;
 
     private String title;
-    @Column(name = "properties_condition")
+    @Column(name = "property_condition")
     private boolean condition;
     private String address;
     private Double area;
