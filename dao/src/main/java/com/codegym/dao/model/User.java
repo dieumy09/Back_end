@@ -1,11 +1,13 @@
 package com.codegym.dao.model;
 
+import com.codegym.dao.model.audit.DateAudit;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

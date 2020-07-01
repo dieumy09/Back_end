@@ -1,24 +1,18 @@
 package com.codegym.dao.model;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.context.annotation.EnableMBeanExport;
+import com.codegym.dao.model.audit.DateAudit;
 
-import javax.jws.soap.SOAPBinding;
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "post")
-public class Post {
+public class Post extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
-    private LocalDateTime datePost;
     @Column(name = "properties_condition")
     private boolean condition;
     private String address;
@@ -59,9 +53,8 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, LocalDateTime datePost, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, User user, PostType postType, Region region, Direction direction, Category category, Set<PostImage> postImages, Set<Comment> comments) {
+    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, User user, PostType postType, Region region, Direction direction, Category category, Set<PostImage> postImages, Set<Comment> comments) {
         this.title = title;
-        this.datePost = datePost;
         this.condition = condition;
         this.address = address;
         this.area = area;
@@ -94,14 +87,6 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public LocalDateTime getDatePost() {
-        return datePost;
-    }
-
-    public void setDatePost(LocalDateTime datePost) {
-        this.datePost = datePost;
     }
 
     public boolean isCondition() {

@@ -1,11 +1,13 @@
 package com.codegym.dao.model;
 
+import com.codegym.dao.model.audit.DateAudit;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "support")
-public class Support {
+public class Support extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,7 +17,6 @@ public class Support {
     private String phoneNumber;
     private String reason;
     private String content;
-    private Date submitDate;
     private boolean status;
 
     public Support() {
@@ -27,7 +28,6 @@ public class Support {
         this.phoneNumber = phoneNumber;
         this.reason = reason;
         this.content = content;
-        this.submitDate = submitDate;
         this.status = status;
     }
 
@@ -77,14 +77,6 @@ public class Support {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Date getSubmitDate() {
-        return submitDate;
-    }
-
-    public void setSubmitDate(Date submitDate) {
-        this.submitDate = submitDate;
     }
 
     public boolean isStatus() {
