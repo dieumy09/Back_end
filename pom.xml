@@ -8,22 +8,20 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <modules>
-        <module>dao</module>
-        <module>service</module>
-        <module>web-service</module>
-        <module>configure</module>
-        <module>common</module>
-    </modules>
     <groupId>com.codegym</groupId>
-    <artifactId>back_end</artifactId>
+    <artifactId>real_estate</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>back_end</name>
+    <name>real_estate</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
+    <modules>
+        <module>dao</module>
+        <module>webservice</module>
+    </modules>
 
     <dependencies>
         <dependency>

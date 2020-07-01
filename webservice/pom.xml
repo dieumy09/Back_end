@@ -8,18 +8,26 @@
         <artifactId>real_estate</artifactId>
     </parent>
     <groupId>com.codegym</groupId>
-    <artifactId>dao</artifactId>
+    <artifactId>webservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>dao</name>
-    <description>dao</description>
+    <name>webservice</name>
+    <description>webservice</description>
 
     <properties>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.codegym</groupId>
+            <artifactId>dao</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
-
 
 </project>
