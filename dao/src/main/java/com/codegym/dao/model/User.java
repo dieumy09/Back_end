@@ -31,7 +31,7 @@ public class User extends DateAudit {
     public User() {
     }
 
-    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated, Set<Post> posts, Set<Role> roles) {
+    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -40,8 +40,6 @@ public class User extends DateAudit {
         this.avatar = avatar;
         this.status = status;
         this.activated = activated;
-        this.posts = posts;
-        this.roles = roles;
     }
 
     public Long getId() {

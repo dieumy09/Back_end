@@ -22,7 +22,7 @@ public class Support extends DateAudit {
     public Support() {
     }
 
-    public Support(String title, String email, String phoneNumber, String reason, String content, Date submitDate, boolean status) {
+    public Support(String title, String email, String phoneNumber, String reason, String content, boolean status) {
         this.title = title;
         this.email = email;
         this.phoneNumber = phoneNumber;

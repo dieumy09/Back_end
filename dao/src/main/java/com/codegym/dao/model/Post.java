@@ -53,7 +53,7 @@ public class Post extends DateAudit {
     public Post() {
     }
 
-    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, User user, PostType postType, Region region, Direction direction, Category category, Set<PostImage> postImages, Set<Comment> comments) {
+    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, User user, PostType postType, Region region, Direction direction, Category category) {
         this.title = title;
         this.condition = condition;
         this.address = address;
@@ -69,8 +69,6 @@ public class Post extends DateAudit {
         this.region = region;
         this.direction = direction;
         this.category = category;
-        this.postImages = postImages;
-        this.comments = comments;
     }
 
     public Long getId() {

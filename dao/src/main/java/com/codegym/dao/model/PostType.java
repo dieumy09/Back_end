@@ -19,10 +19,9 @@ public class PostType {
     public PostType() {
     }
 
-    public PostType(String name, boolean status, Set<Post> posts) {
+    public PostType(String name, boolean status) {
         this.name = name;
         this.status = status;
-        this.posts = posts;
     }
 
     public Long getId() {
