@@ -12,13 +12,28 @@ public class User extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String address;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String phoneNumber;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String password;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String avatar;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
+
+    @Column(columnDefinition = "BIT(1) default 0")
     private boolean activated;
 
     @OneToMany(mappedBy = "user")

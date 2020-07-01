@@ -10,7 +10,10 @@ public class PostType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
 
     @OneToMany(mappedBy = "postType")

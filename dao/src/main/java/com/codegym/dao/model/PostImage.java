@@ -11,6 +11,7 @@ public class PostImage extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
     private String image;
 
     @ManyToOne()

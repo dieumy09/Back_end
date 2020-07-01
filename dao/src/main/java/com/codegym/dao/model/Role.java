@@ -10,6 +10,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50)")
     private String role;
 
     @ManyToMany

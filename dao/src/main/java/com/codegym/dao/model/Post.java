@@ -12,16 +12,31 @@ public class Post extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50)")
     private String title;
+
     @Column(name = "property_condition")
     private boolean condition;
+
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String address;
+
     private Double area;
+
     private Long price;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean deal;
+
     private Long viewCount;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
+
+    @Column(columnDefinition = "BIT(1) default 0")
     private boolean approved;
 
     @ManyToOne
