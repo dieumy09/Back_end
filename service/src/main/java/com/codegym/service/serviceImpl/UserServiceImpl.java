@@ -12,12 +12,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
+    @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    @Autowired
-
 
     @Override
     public Page<User> findAll(Pageable pageable) {
