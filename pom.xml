@@ -10,6 +10,7 @@
     </parent>
     <groupId>com.codegym</groupId>
     <artifactId>real_estate</artifactId>
+    <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>real_estate</name>
     <description>Demo project for Spring Boot</description>
