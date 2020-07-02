@@ -29,13 +29,14 @@ public class RoleController {
         return new ResponseEntity<>(roleService.findAll(), HttpStatus.OK);
     }
 
+
     //-------------------Get One Role By Id--------------------------------------------------------
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findRoleById(@PathVariable("id")Long id){
         Role role = roleService.findById(id);
         if (role == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find role!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find role!"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(role,HttpStatus.OK);
     }
@@ -57,6 +58,9 @@ public class RoleController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateRole(@PathVariable Long id, @RequestBody Role role) {
         role.setId(id);
+        if (roleService.findById(id) == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this role!"), HttpStatus.NOT_FOUND);
+        }
         roleService.save(role);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -72,7 +76,7 @@ public class RoleController {
     public ResponseEntity<Object> deleteRole(@PathVariable("id") Long id){
         Role role = roleService.findById(id);
         if (role == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find role!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find role!"), HttpStatus.NOT_FOUND);
         }
         roleService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);

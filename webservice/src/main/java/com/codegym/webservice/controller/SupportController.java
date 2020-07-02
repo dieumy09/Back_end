@@ -36,7 +36,7 @@ public class SupportController {
     public ResponseEntity<Object> findSupportById(@PathVariable("id")Long id){
         Support support = supportService.findById(id);
         if (support == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find support!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find support!"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(support,HttpStatus.OK);
     }
@@ -58,6 +58,9 @@ public class SupportController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateSupport(@PathVariable Long id, @RequestBody Support support) {
         support.setId(id);
+        if (supportService.findById(id) == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this support!"), HttpStatus.NOT_FOUND);
+        }
         supportService.save(support);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -73,7 +76,7 @@ public class SupportController {
     public ResponseEntity<Object> deleteSupport(@PathVariable("id") Long id){
         Support support = supportService.findById(id);
         if (support == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find support!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find support!"), HttpStatus.NOT_FOUND);
         }
         supportService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
