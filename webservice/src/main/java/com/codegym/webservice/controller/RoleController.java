@@ -79,6 +79,6 @@ public class RoleController {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find role!"), HttpStatus.NOT_FOUND);
         }
         roleService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse(true, "Delete role successfully!"), HttpStatus.OK);
     }
 }

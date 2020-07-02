@@ -79,6 +79,6 @@ public class SupportController {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find support!"), HttpStatus.NOT_FOUND);
         }
         supportService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse(true, "Delete support successfully!"), HttpStatus.OK);
     }
 }

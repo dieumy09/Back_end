@@ -80,6 +80,6 @@ public class UserController {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
         }
         userService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
     }
 }
