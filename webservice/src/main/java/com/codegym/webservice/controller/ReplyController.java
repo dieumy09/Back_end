@@ -36,7 +36,7 @@ public class ReplyController {
     public ResponseEntity<Object> findReplyById(@PathVariable("id")Long id){
         Reply reply = replyService.findById(id);
         if (reply == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find reply!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this reply!"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(reply,HttpStatus.OK);
     }
@@ -58,6 +58,9 @@ public class ReplyController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateReply(@PathVariable Long id, @RequestBody Reply reply) {
         reply.setId(id);
+        if (replyService.findById(id) == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this reply!"), HttpStatus.NOT_FOUND);
+        }
         replyService.save(reply);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -73,9 +76,9 @@ public class ReplyController {
     public ResponseEntity<Object> deleteReply(@PathVariable("id") Long id){
         Reply reply = replyService.findById(id);
         if (reply == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find reply!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this reply!"), HttpStatus.NOT_FOUND);
         }
         replyService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(new ApiResponse(true, "Delete reply successfully!"), HttpStatus.OK);
     }
 }

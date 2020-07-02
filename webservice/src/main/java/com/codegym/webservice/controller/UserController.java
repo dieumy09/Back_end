@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<Object> findUserById(@PathVariable("id")Long id){
         User user = userService.findById(id);
         if (user == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
@@ -59,6 +59,9 @@ public class UserController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
+        if (userService.findById(id) == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
+        }
         userService.save(user);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -74,7 +77,7 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id){
         User user = userService.findById(id);
         if (user == null){
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
         }
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
