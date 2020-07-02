@@ -1,8 +1,6 @@
 package com.codegym.service.serviceImpl;
 
-import com.codegym.dao.model.Comment;
 import com.codegym.dao.model.Reply;
-import com.codegym.dao.repository.CategoryRepository;
 import com.codegym.dao.repository.ReplyRepository;
 import com.codegym.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,8 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Page<Reply> findRepliesByComment(Comment comment, Pageable pageable) {
-        return replyRepository.findRepliesByComment(comment, pageable);
+    public Page<Reply> findRepliesByComment(Long commentId, Pageable pageable) {
+        return replyRepository.findRepliesByComment_Id(commentId, pageable);
     }
 
     @Override
