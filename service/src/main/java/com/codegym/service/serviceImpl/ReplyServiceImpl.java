@@ -1,10 +1,7 @@
 package com.codegym.service.serviceImpl;
 
-import com.codegym.dao.model.Comment;
 import com.codegym.dao.model.Reply;
-import com.codegym.dao.repository.CommentRepository;
 import com.codegym.dao.repository.ReplyRepository;
-import com.codegym.service.CommentService;
 import com.codegym.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
