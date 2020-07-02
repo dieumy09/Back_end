@@ -1,10 +1,15 @@
 package com.codegym.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "post_type")
+@JsonIgnoreProperties({
+        "posts"
+})
 public class PostType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +21,12 @@ public class PostType {
     @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
 
-    @OneToMany(mappedBy = "postType")
+    @OneToMany(mappedBy = "postType", fetch = FetchType.LAZY, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     private Set<Post> posts;
 
     public PostType() {

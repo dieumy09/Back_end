@@ -1,12 +1,16 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "comment")
+@JsonIgnoreProperties({
+        "replies"
+})
 public class Comment extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,10 +19,18 @@ public class Comment extends DateAudit {
     private String content;
     private boolean status;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(
+            mappedBy = "comment",
+            fetch = FetchType.LAZY,
+            cascade = { CascadeType.ALL })
     private Set<Reply> replies;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_comment_post"))
     private Post post;
 

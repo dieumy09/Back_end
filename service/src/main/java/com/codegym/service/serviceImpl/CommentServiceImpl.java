@@ -29,12 +29,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Page<Comment> findByPostId(Long id, Pageable pageable) {
+        return commentRepository.findCommentsByPost_Id(id, pageable);
+    }
+
+
+    @Override
     public Comment findById(Long id) {
         return commentRepository.findById(id).orElse(null);
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         commentRepository.deleteById(id);
     }
 }

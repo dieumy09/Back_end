@@ -1,6 +1,7 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
@@ -14,8 +15,14 @@ public class PostImage extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
     private String image;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "post_id", nullable = false, foreignKey = @ForeignKey(name = "FK_post_image_post"))
+    @JsonBackReference
     private Post post;
 
     public PostImage() {
