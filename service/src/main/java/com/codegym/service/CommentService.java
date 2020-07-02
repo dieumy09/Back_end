@@ -9,5 +9,5 @@ public interface CommentService {
     Page<Comment> findAll(Pageable pageable);
     Page<Comment> findByPostId(Long id, Pageable pageable);
     Comment findById(Long id);
-    void delete(Long id);
+    void deleteById(Long id);
 }
