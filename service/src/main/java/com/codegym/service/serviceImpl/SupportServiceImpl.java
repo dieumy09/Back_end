@@ -1,0 +1,37 @@
+package com.codegym.service.serviceImpl;
+
+import com.codegym.dao.model.Support;
+import com.codegym.dao.repository.SupportRepository;
+import com.codegym.service.SupportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SupportServiceImpl implements SupportService {
+    @Autowired
+    private SupportRepository supportRepository;
+
+    @Override
+    public Page<Support> findAll(Pageable pageable) {
+        return supportRepository.findAll(pageable);
+    }
+
+    @Override
+    public Support findById(Long id) {
+        return supportRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void save(Support support) {
+        supportRepository.save(support);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        supportRepository.deleteById(id);
+    }
+
+
+}
