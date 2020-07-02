@@ -2,6 +2,7 @@ package com.codegym.service.serviceImpl;
 
 import com.codegym.dao.model.Comment;
 import com.codegym.dao.model.Reply;
+import com.codegym.dao.repository.CategoryRepository;
 import com.codegym.dao.repository.ReplyRepository;
 import com.codegym.service.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReplyServiceImpl implements ReplyService {
-    @Autowired
     private ReplyRepository replyRepository;
+
+    @Autowired
+    public void setReplyRepository(ReplyRepository replyRepository) {
+        this.replyRepository = replyRepository;
+    }
 
     @Override
     public Page<Reply> findAll(Pageable pageable) {
