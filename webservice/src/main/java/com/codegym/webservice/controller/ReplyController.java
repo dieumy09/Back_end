@@ -2,16 +2,16 @@ package com.codegym.webservice.controller;
 
 import com.codegym.dao.model.Reply;
 import com.codegym.service.ReplyService;
+import com.codegym.webservice.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import java.net.URI;
 
 @RestController
 @RequestMapping(path = "/api/v1/replies")
@@ -26,51 +26,56 @@ public class ReplyController {
     //-------------------Get All Replies--------------------------------------------------------
 
     @GetMapping()
-    public ResponseEntity<List<Reply>> findAllReplies(Pageable pageable){
-        List<Reply> replies = (List<Reply>) replyService.findAll(pageable);
-        if (replies.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(replies, HttpStatus.OK);
+    public ResponseEntity<Object> findAllReplies(Pageable pageable){
+        return new ResponseEntity<>(replyService.findAll(pageable), HttpStatus.OK);
     }
 
-    //-------------------Get One Reply by id--------------------------------------------------------
+    //-------------------Get One Reply By Id--------------------------------------------------------
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Reply> findReplyById(@PathVariable("id")Long id){
+    public ResponseEntity<Object> findReplyById(@PathVariable("id")Long id){
         Reply reply = replyService.findById(id);
         if (reply == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find reply!"), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(reply,HttpStatus.OK);
     }
 
     //-------------------Create a Reply--------------------------------------------------------
 
-    @PostMapping()
-    public ResponseEntity<Void> createReply(@RequestBody Reply reply, UriComponentsBuilder uriComponentsBuilder){
+    @PostMapping
+    public ResponseEntity<Object> createReply(@RequestBody Reply reply) {
         replyService.save(reply);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(uriComponentsBuilder.path("/{id}").buildAndExpand(reply.getId()).toUri());
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(reply.getId()).toUri();
+        return ResponseEntity.created(location)
+                .body(reply);
     }
 
     //-------------------Update a Reply--------------------------------------------------------
-    @PatchMapping("/{id}")
-    public ResponseEntity<Reply> updateReply(@PathVariable("id") Long id, @RequestBody Reply reply){
-        replyService.findById(id);
-        return null;
+    @PatchMapping(value = "/{id}")
+    public ResponseEntity<Object> updateReply(@PathVariable Long id, @RequestBody Reply reply) {
+        reply.setId(id);
+        replyService.save(reply);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(reply.getId()).toUri();
+        return ResponseEntity.created(location)
+                .body(reply);
     }
 
-    //-------------------Delete a Category--------------------------------------------------------
+    //-------------------Delete a Reply--------------------------------------------------------
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Reply> deleteReply(@PathVariable("id") Long id){
+    public ResponseEntity<Object> deleteReply(@PathVariable("id") Long id){
         Reply reply = replyService.findById(id);
         if (reply == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find reply!"), HttpStatus.BAD_REQUEST);
         }
         replyService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
