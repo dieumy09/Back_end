@@ -14,7 +14,7 @@ import java.net.URI;
 @RestController
 @RequestMapping(path = "/api/v1/categories")
 public class CategoryController {
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
     public void setCategoryService(CategoryService categoryService) {
@@ -30,7 +30,7 @@ public class CategoryController {
     public ResponseEntity<Object> findRepositoryById(@PathVariable Long id) {
         Category category = categoryService.findById(id);
         if (category == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find category!"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this category!"), HttpStatus.NOT_FOUND);
         } else  {
             return new ResponseEntity<>(category, HttpStatus.OK);
         }
@@ -50,12 +50,22 @@ public class CategoryController {
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateCategory(@PathVariable Long id, @RequestBody Category category) {
         category.setId(id);
+        if (categoryService.findById(id) == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this category!"), HttpStatus.NOT_FOUND);
+        }
+        categoryService.save(category);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(category.getId()).toUri();
         return ResponseEntity.created(location)
                 .body(category);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Object> deleteCategory(@PathVariable Long id) {
+       categoryService.deleteById(id);
+       return new ResponseEntity<>(new ApiResponse(true, "Delete repository successfully!"), HttpStatus.OK);
     }
 
 
