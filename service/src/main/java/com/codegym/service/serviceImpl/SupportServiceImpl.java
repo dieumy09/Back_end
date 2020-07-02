@@ -10,8 +10,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SupportServiceImpl implements SupportService {
-    @Autowired
     private SupportRepository supportRepository;
+
+    public void setSupportRepository(SupportRepository supportRepository) {
+        this.supportRepository = supportRepository;
+    }
+
+    @Autowired
+
 
     @Override
     public Page<Support> findAll(Pageable pageable) {
