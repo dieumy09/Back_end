@@ -11,10 +11,11 @@ public class PostImage extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
     private String image;
 
     @ManyToOne()
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id", nullable = false, foreignKey = @ForeignKey(name = "FK_post_image_post"))
     private Post post;
 
     public PostImage() {

@@ -12,36 +12,51 @@ public class Post extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50)")
     private String title;
+
     @Column(name = "property_condition")
     private boolean condition;
+
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String address;
+
     private Double area;
+
     private Long price;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean deal;
+
     private Long viewCount;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
+
+    @Column(columnDefinition = "BIT(1) default 0")
     private boolean approved;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "post_type_id")
+    @JoinColumn(name = "post_type_id", foreignKey = @ForeignKey(name = "FK_post_post_type"))
     private PostType postType;
 
     @ManyToOne
-    @JoinColumn(name = "region_id")
+    @JoinColumn(name = "region_id", foreignKey = @ForeignKey(name = "FK_post_region"))
     private Region region;
 
     @ManyToOne
-    @JoinColumn(name = "direction_id")
+    @JoinColumn(name = "direction_id", foreignKey = @ForeignKey(name = "FK_post_direction"))
     private Direction direction;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_post_category"))
     private Category category;
 
     @OneToMany(mappedBy = "post")

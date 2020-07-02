@@ -11,7 +11,7 @@ public class Comment extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String content;
     private boolean status;
 
@@ -19,7 +19,7 @@ public class Comment extends DateAudit {
     private Set<Reply> replies;
 
     @ManyToOne()
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_comment_post"))
     private Post post;
 
     public Comment() {

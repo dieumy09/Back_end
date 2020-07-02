@@ -12,11 +12,18 @@ public class Support extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String title;
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String phoneNumber;
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String reason;
+    @Column(columnDefinition = "TEXT NOT NULL")
     private String content;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
 
     public Support() {

@@ -1,8 +1,5 @@
 package com.codegym.webservice;
 
-import com.codegym.dao.model.Category;
-import com.codegym.dao.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

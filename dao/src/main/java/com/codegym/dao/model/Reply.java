@@ -11,11 +11,14 @@ public class Reply extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String content;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "FK_reply_comment"))
     private Comment comment;
 
     public Reply() {

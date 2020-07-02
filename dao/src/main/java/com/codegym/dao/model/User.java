@@ -12,20 +12,38 @@ public class User extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String address;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String phoneNumber;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String password;
+
+    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String avatar;
+
+    @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
+
+    @Column(columnDefinition = "BIT(1) default 0")
     private boolean activated;
 
     @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 
     @ManyToMany
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_roles_user")),
+            inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_users_roles_role"))
+    )
     private Set<Role> roles;
 
     public User() {
