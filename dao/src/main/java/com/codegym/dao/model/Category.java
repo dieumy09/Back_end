@@ -1,10 +1,15 @@
 package com.codegym.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "category")
+@JsonIgnoreProperties({
+        "posts"
+})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,7 +17,12 @@ public class Category {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     private Set<Post> posts;
 
     public Category() {

@@ -1,12 +1,17 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "post")
+@JsonIgnoreProperties({
+        "comments"
+})
 public class Post extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,30 +44,56 @@ public class Post extends DateAudit {
     @Column(columnDefinition = "BIT(1) default 0")
     private boolean approved;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "post_type_id", foreignKey = @ForeignKey(name = "FK_post_post_type"))
     private PostType postType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "region_id", foreignKey = @ForeignKey(name = "FK_post_region"))
     private Region region;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "direction_id", foreignKey = @ForeignKey(name = "FK_post_direction"))
     private Direction direction;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.DETACH,
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_post_category"))
     private Category category;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<PostImage> postImages;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Comment> comments;
 
     public Post() {
