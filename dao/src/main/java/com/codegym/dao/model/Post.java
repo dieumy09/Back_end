@@ -1,6 +1,7 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -44,6 +45,7 @@ public class Post extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean approved;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
