@@ -23,8 +23,8 @@ public class Support extends DateAudit {
     @Column(columnDefinition = "TEXT NOT NULL")
     private String content;
 
-    @Column(columnDefinition = "BIT(1) default 1")
-    private boolean status;
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean status = true;
 
     public Support() {
     }

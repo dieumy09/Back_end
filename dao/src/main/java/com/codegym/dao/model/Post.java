@@ -30,59 +30,37 @@ public class Post extends DateAudit {
 
     private Long price;
 
-    @Column(columnDefinition = "BIT(1) default 1")
-    private boolean deal;
+    @Column(columnDefinition = "TINYINT(1) default 0")
+    private boolean deal = false;
 
     private Long viewCount;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column(columnDefinition = "BIT(1) default 1")
-    private boolean status;
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean status = true;
 
-    @Column(columnDefinition = "BIT(1) default 0")
+    @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean approved;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.MERGE,
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_type_id", foreignKey = @ForeignKey(name = "FK_post_post_type"))
     private PostType postType;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_id", foreignKey = @ForeignKey(name = "FK_post_region"))
     private Region region;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id", foreignKey = @ForeignKey(name = "FK_post_direction"))
     private Direction direction;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_post_category"))
     private Category category;
 

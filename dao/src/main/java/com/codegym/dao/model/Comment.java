@@ -17,7 +17,8 @@ public class Comment extends DateAudit {
     private Long id;
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String content;
-    private boolean status;
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean status = true;
 
     @OneToMany(
             mappedBy = "comment",
@@ -25,12 +26,7 @@ public class Comment extends DateAudit {
             cascade = { CascadeType.ALL })
     private Set<Reply> replies;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_comment_post"))
     private Post post;
 
