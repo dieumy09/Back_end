@@ -18,7 +18,7 @@ public class PostType {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
 
-    @Column(columnDefinition = "BIT(1) default 1")
+    @Column(columnDefinition = "TINYINT(1) default 1")
     private boolean status;
 
     @OneToMany(mappedBy = "postType", fetch = FetchType.LAZY, cascade = {

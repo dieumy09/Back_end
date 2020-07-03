@@ -16,10 +16,7 @@ public class PostImage extends DateAudit {
     private String image;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
+            CascadeType.MERGE
     })
     @JoinColumn(name = "post_id", nullable = false, foreignKey = @ForeignKey(name = "FK_post_image_post"))
     @JsonBackReference

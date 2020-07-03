@@ -21,12 +21,7 @@ public class Reply extends DateAudit {
     @Column(columnDefinition = "BIT(1) default 1")
     private boolean status;
 
-    @ManyToOne(cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    }, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "FK_reply_comment"))
     private Comment comment;
 
