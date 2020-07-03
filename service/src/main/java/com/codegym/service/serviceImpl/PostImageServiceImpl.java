@@ -39,7 +39,7 @@ public class PostImageServiceImpl implements PostImageService {
     }
 
     @Override
-    public Set<PostImage> findByPost(Long id) {
+    public Set<PostImage> findByPostId(Long id) {
         Post post = postService.findById(id);
         return post.getPostImages();
     }

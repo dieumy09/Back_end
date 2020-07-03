@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages="com.codegym.dao.repository")
-@EnableJpaAuditing()
 @ComponentScan("com.codegym")
 @EntityScan("com.codegym.dao.model")
+@EnableJpaAuditing()
 public class WebserviceApplication {
 
     public static void main(String[] args) {
