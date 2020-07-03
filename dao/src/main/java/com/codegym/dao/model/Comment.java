@@ -18,7 +18,7 @@ public class Comment extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String content;
     @Column(columnDefinition = "TINYINT(1) default 1")
-    private boolean status;
+    private boolean status = true;
 
     @OneToMany(
             mappedBy = "comment",
