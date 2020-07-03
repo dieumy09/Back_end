@@ -24,7 +24,7 @@ public class Support extends DateAudit {
     private String content;
 
     @Column(columnDefinition = "TINYINT(1) default 1")
-    private boolean status;
+    private boolean status = true;
 
     public Support() {
     }

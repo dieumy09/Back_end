@@ -35,7 +35,7 @@ public class User extends DateAudit {
     private String avatar;
 
     @Column(columnDefinition = "TINYINT(1) default 1")
-    private boolean status;
+    private boolean status = true;
 
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean activated;

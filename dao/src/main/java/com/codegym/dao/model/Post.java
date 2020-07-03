@@ -30,8 +30,8 @@ public class Post extends DateAudit {
 
     private Long price;
 
-    @Column(columnDefinition = "TINYINT(1) default 1")
-    private boolean deal;
+    @Column(columnDefinition = "TINYINT(1) default 0")
+    private boolean deal = false;
 
     private Long viewCount;
 
@@ -39,7 +39,7 @@ public class Post extends DateAudit {
     private String content;
 
     @Column(columnDefinition = "TINYINT(1) default 1")
-    private boolean status;
+    private boolean status = true;
 
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean approved;
