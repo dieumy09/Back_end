@@ -45,10 +45,7 @@ public class Post extends DateAudit {
     private boolean approved;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
             CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
     })
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
