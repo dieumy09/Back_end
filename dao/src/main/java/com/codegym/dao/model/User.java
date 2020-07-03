@@ -34,10 +34,10 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String avatar;
 
-    @Column(columnDefinition = "BIT(1) default 1")
+    @Column(columnDefinition = "TINYINT(1) default 1")
     private boolean status;
 
-    @Column(columnDefinition = "BIT(1) default 0")
+    @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean activated;
 
     @OneToMany(mappedBy = "user")
