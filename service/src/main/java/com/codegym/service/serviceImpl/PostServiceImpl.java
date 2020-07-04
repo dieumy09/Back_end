@@ -36,4 +36,5 @@ public class PostServiceImpl implements PostService {
     public void deleteById(Long id) {
         postRepository.deleteById(id);
     }
+
 }

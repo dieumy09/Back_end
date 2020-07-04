@@ -1,14 +1,19 @@
 package com.codegym.webservice.controller;
 
+import com.codegym.dao.model.Post;
 import com.codegym.dao.model.User;
+import com.codegym.service.PostService;
 import com.codegym.service.UserService;
 import com.codegym.webservice.payload.ApiResponse;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -17,11 +22,17 @@ import java.net.URI;
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
     private UserService userService;
-
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    private PostService postService;
+    @Autowired
+    public void setPostService(PostService postService) {
+        this.postService = postService;
+    }
+
 
     //-------------------Get All Users--------------------------------------------------------
 
@@ -82,4 +93,5 @@ public class UserController {
         userService.deleteById(id);
         return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
     }
+
 }
