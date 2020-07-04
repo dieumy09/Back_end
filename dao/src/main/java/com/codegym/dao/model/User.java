@@ -1,9 +1,7 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,7 +9,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties({
-//        "posts",
+        "posts",
         "password"
 })
 public class User extends DateAudit {
@@ -43,7 +41,6 @@ public class User extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean activated;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 

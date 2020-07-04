@@ -94,4 +94,14 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, Pageable pageable) {
+        User user = userService.findById(id);
+        if (user == null){
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+        }
+        Page<Post> posts = postService.findPostsByUserId(id, pageable);
+        return new ResponseEntity<>(posts,HttpStatus.OK);
+    }
+
 }

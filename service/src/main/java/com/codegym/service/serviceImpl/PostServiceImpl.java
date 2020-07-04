@@ -37,4 +37,9 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
     }
 
+    @Override
+    public Page<Post> findPostsByUserId(Long userId, Pageable pageable) {
+        return postRepository.getPostsByUser_Id(userId, pageable);
+    }
+
 }
