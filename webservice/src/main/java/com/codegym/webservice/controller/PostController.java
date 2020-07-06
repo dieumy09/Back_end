@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -49,7 +50,7 @@ public class PostController {
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody Post post) {
+    public ResponseEntity<Object> updatePost(@PathVariable Long id, @Valid @RequestBody Post post) {
         post.setId(id);
         if (postService.findById(id) == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this post!"), HttpStatus.NOT_FOUND);

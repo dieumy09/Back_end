@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -94,8 +95,10 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
     }
 
+    //-------------------Find Posts By UserId--------------------------------------------------------
+
     @GetMapping("/{id}/posts")
-    public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, Pageable pageable) {
+    public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable) {
         User user = userService.findById(id);
         if (user == null){
             return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
