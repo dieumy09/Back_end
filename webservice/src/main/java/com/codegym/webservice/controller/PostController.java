@@ -3,7 +3,9 @@ package com.codegym.webservice.controller;
 import com.codegym.dao.model.Post;
 import com.codegym.service.PostService;
 import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.PostSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,6 +76,23 @@ public class PostController {
             return new ResponseEntity<>(new ApiResponse(true, "Delete post successfully!"), HttpStatus.OK);
         }
     }
+
+    @PostMapping(value = "/searchAll")
+    public ResponseEntity<Object> findAllBySearchModal(Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+        Page<Post> posts = postService.findAllBySearchModal(
+                pageable, postSearchRequest.getCategoryId(),
+                postSearchRequest.getRegionId(),
+                postSearchRequest.getPostTypeId(),
+                postSearchRequest.getCondition(),
+                postSearchRequest.getArea(),
+                postSearchRequest.getPrice(),
+                postSearchRequest.getDeal(),
+                postSearchRequest.getDirectionId(),
+                postSearchRequest.getKeyword()
+        );
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
 
 
 }

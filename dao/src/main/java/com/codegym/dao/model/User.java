@@ -41,6 +41,7 @@ public class User extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean activated;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 
