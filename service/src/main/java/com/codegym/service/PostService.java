@@ -22,4 +22,5 @@ public interface PostService {
             Long directionId,
             String keyword
     );
+    Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
 }

@@ -95,16 +95,23 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
     }
 
-    //-------------------Find Posts By UserId--------------------------------------------------------
+    //-------------------Find Posts By UserId Pagination And Search--------------------------------------------------------
 
     @GetMapping("/{id}/posts")
-    public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
+        Page<Post> posts = null;
         User user = userService.findById(id);
         if (user == null){
             return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
         }
-        Page<Post> posts = postService.findPostsByUserId(id, pageable);
+        if (search != null) {
+            posts = postService.findPostsByUser_IdAndTitleContaining(id, search, pageable);
+        }
+        else {
+            posts = postService.findPostsByUserId(id, pageable);
+        }
         return new ResponseEntity<>(posts,HttpStatus.OK);
     }
+
 
 }
