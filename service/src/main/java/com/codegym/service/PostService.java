@@ -9,4 +9,5 @@ public interface PostService {
     Post findById(Long id);
     void save(Post post);
     void deleteById(Long id);
+    Page<Post> findPostsByUserId(Long userId, Pageable pageable);
 }
