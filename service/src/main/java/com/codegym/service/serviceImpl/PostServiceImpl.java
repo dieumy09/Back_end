@@ -60,11 +60,13 @@ public class PostServiceImpl implements PostService {
                 , pageable);
     }
 
-
-
     @Override
     public Page<Post> findPostsByUserId(Long userId, Pageable pageable) {
         return postRepository.getPostsByUser_Id(userId, pageable);
     }
 
+    @Override
+    public Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable) {
+        return postRepository.getPostsByUser_IdAndTitleContaining(userId, title, pageable);
+    }
 }

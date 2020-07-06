@@ -2,8 +2,11 @@ package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @Entity
@@ -17,16 +20,24 @@ public class Post extends DateAudit {
     private Long id;
 
     @Column(columnDefinition = "NVARCHAR(50)")
+    @NotBlank
+    @Size(max = 50)
     private String title;
 
     @Column(name = "property_condition")
     private boolean condition;
 
     @Column(columnDefinition = "NVARCHAR(100)")
+    @NotBlank
+    @Size(max = 100)
     private String address;
 
+    @NotNull
+    @Min(0)
     private Double area;
 
+    @NotNull
+    @Min(0)
     private Long price;
 
     @Column(columnDefinition = "TINYINT(1) default 0")
@@ -35,6 +46,8 @@ public class Post extends DateAudit {
     private Long viewCount;
 
     @Column(columnDefinition = "TEXT")
+    @NotBlank
+    @Size(max = 65535)
     private String content;
 
     @Column(columnDefinition = "TINYINT(1) default 1")
