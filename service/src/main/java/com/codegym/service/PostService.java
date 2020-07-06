@@ -10,4 +10,16 @@ public interface PostService {
     void save(Post post);
     void deleteById(Long id);
     Page<Post> findPostsByUserId(Long userId, Pageable pageable);
+    Page<Post> findAllBySearchModal(
+            Pageable pageable,
+            Long categoryId,
+            Long regionId,
+            Long postTypeId,
+            Boolean condition,
+            Double area,
+            Long price,
+            Boolean deal,
+            Long directionId,
+            String keyword
+    );
 }
