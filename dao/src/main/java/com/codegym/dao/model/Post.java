@@ -1,9 +1,7 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -45,7 +43,9 @@ public class Post extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean approved;
 
-    @JsonBackReference
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean customerType;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
@@ -76,7 +76,7 @@ public class Post extends DateAudit {
     public Post() {
     }
 
-    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, User user, PostType postType, Region region, Direction direction, Category category) {
+    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, boolean customerType, User user, PostType postType, Region region, Direction direction, Category category) {
         this.title = title;
         this.condition = condition;
         this.address = address;
@@ -87,6 +87,7 @@ public class Post extends DateAudit {
         this.content = content;
         this.status = status;
         this.approved = approved;
+        this.customerType = customerType;
         this.user = user;
         this.postType = postType;
         this.region = region;
@@ -238,5 +239,11 @@ public class Post extends DateAudit {
         this.comments = comments;
     }
 
+    public boolean isCustomerType() {
+        return customerType;
+    }
 
+    public void setCustomerType(boolean customerType) {
+        this.customerType = customerType;
+    }
 }
