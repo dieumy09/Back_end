@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 
@@ -44,7 +45,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> findAllBySearchModal(Pageable pageable, Long categoryId, Long regionId, Long postTypeId, Boolean condition, Double area, Long price, Boolean deal, Long directionId, String keyword) {
+    public Page<Post> findAllBySearchModal(Pageable pageable, Long categoryId, Long regionId, Long postTypeId, Boolean condition, Double area, Long price, Boolean deal, Long directionId, String keyword, Boolean customerType) {
         return postRepository.findAll(
                 Specification
                         .where(PostSpecification.hasCategoryId(categoryId))
@@ -56,6 +57,7 @@ public class PostServiceImpl implements PostService {
                         .and(PostSpecification.hasDeal(deal))
                         .and(PostSpecification.hasDirectionId(directionId))
                         .and(PostSpecification.isApproved(true))
+                        .and(PostSpecification.hasCustomerType(customerType))
                         .and(PostSpecification.textInAllColumns(keyword, Arrays.asList("title", "content")))
                 , pageable);
     }
