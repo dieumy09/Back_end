@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> findAllBySearchModal(Pageable pageable, Long categoryId, Long regionId, Long postTypeId, Boolean condition, Double area, Long price, Boolean deal, Long directionId, String keyword, Boolean customerType) {
+    public Page<Post> findAllBySearchModal(Pageable pageable, Long categoryId, Long regionId, Long postTypeId, Boolean condition, Double area, Long price, Boolean deal, Long directionId, String keyword, Boolean customerType, String direction) {
         return postRepository.findAll(
                 Specification
                         .where(PostSpecification.hasCategoryId(categoryId))
@@ -59,6 +59,7 @@ public class PostServiceImpl implements PostService {
                         .and(PostSpecification.isApproved(true))
                         .and(PostSpecification.hasCustomerType(customerType))
                         .and(PostSpecification.textInAllColumns(keyword, Arrays.asList("title", "content")))
+                        .and(PostSpecification.hasDirection(direction))
                 , pageable);
     }
 
@@ -71,4 +72,5 @@ public class PostServiceImpl implements PostService {
     public Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable) {
         return postRepository.getPostsByUser_IdAndTitleContaining(userId, title, pageable);
     }
+
 }

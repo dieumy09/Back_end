@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/posts")
@@ -81,6 +82,36 @@ public class PostController {
 
     @PostMapping(value = "/searchAll")
     public ResponseEntity<Object> findAllBySearchModal(@PageableDefault(value = 8) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+        String direction = "";
+        if (postSearchRequest.getYear() != null) {
+            int year = Integer.parseInt(postSearchRequest.getYear());
+            if (((year % 4 == 0) && (year % 100 != 0)) ||
+                    (year % 400 == 0)) {
+                if (year % 2 == 0) {
+                    direction += "Tây ";
+                } else {
+                    direction += "Đông ";
+                }
+                if (postSearchRequest.getGender()) {
+                    direction += "Nam ";
+                } else  {
+                    direction += "Bắc ";
+                }
+            } else {
+                if (year % 2 == 0 && postSearchRequest.getGender() == true) {
+                    direction += "Nam ";
+                }
+                if (year % 2 == 0 && postSearchRequest.getGender() == false) {
+                    direction += "Bắc ";
+                }
+                if (year % 2 != 0 && postSearchRequest.getGender() == true) {
+                    direction += "Tây ";
+                }
+                if (year % 2 != 0 && postSearchRequest.getGender() != false) {
+                    direction += "Đông ";
+                }
+            }
+        }
         Page<Post> posts = postService.findAllBySearchModal(
                 pageable, postSearchRequest.getCategoryId(),
                 postSearchRequest.getRegionId(),
@@ -91,17 +122,10 @@ public class PostController {
                 postSearchRequest.getDeal(),
                 postSearchRequest.getDirectionId(),
                 postSearchRequest.getKeyword(),
-                postSearchRequest.getCustomerType()
+                postSearchRequest.getCustomerType(),
+                direction
         );
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
-
-    @PostMapping(value = "/searchByYear")
-    public ResponseEntity<Object> findByYearAndGender(Pageable pageable, @RequestBody PostSearchByYearRequest postSearchByYearRequest) {
-        return new ResponseEntity<>(postSearchByYearRequest, HttpStatus.OK);
-    }
-
-
 
 }

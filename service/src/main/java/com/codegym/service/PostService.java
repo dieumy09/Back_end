@@ -21,7 +21,8 @@ public interface PostService {
             Boolean deal,
             Long directionId,
             String keyword,
-            Boolean customerType
+            Boolean customerType,
+            String direction
     );
     Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
 }
