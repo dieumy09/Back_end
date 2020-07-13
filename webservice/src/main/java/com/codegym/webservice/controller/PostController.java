@@ -3,10 +3,12 @@ package com.codegym.webservice.controller;
 import com.codegym.dao.model.Post;
 import com.codegym.service.PostService;
 import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.PostSearchByYearRequest;
 import com.codegym.webservice.payload.PostSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +79,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/searchAll")
-    public ResponseEntity<Object> findAllBySearchModal(Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+    public ResponseEntity<Object> findAllBySearchModal(@PageableDefault(value = 8) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
         Page<Post> posts = postService.findAllBySearchModal(
                 pageable, postSearchRequest.getCategoryId(),
                 postSearchRequest.getRegionId(),
@@ -87,9 +89,16 @@ public class PostController {
                 postSearchRequest.getPrice(),
                 postSearchRequest.getDeal(),
                 postSearchRequest.getDirectionId(),
-                postSearchRequest.getKeyword()
+                postSearchRequest.getKeyword(),
+                postSearchRequest.getCustomerType()
         );
         return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/searchByYear")
+    public ResponseEntity<Object> findByYearAndGender(Pageable pageable, @RequestBody PostSearchByYearRequest postSearchByYearRequest) {
+        return new ResponseEntity<>(postSearchByYearRequest, HttpStatus.OK);
     }
 
 

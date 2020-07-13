@@ -11,11 +11,12 @@ public class PostSearchRequest {
     private Boolean deal;
     private Long directionId;
     private String keyword;
+    private Boolean customerType;
 
     public PostSearchRequest() {
     }
 
-    public PostSearchRequest(Long categoryId, Long regionId, Long postTypeId, Boolean condition, Double area, Long price, Boolean deal, Long directionId, String keyword) {
+    public PostSearchRequest(Long categoryId, Long regionId, Long postTypeId, Boolean condition, Double area, Long price, Boolean deal, Long directionId, String keyword, Boolean customerType) {
         this.categoryId = categoryId;
         this.regionId = regionId;
         this.postTypeId = postTypeId;
@@ -25,6 +26,7 @@ public class PostSearchRequest {
         this.deal = deal;
         this.directionId = directionId;
         this.keyword = keyword;
+        this.customerType = customerType;
     }
 
     public Long getCategoryId() {
@@ -97,5 +99,13 @@ public class PostSearchRequest {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public Boolean getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(Boolean customerType) {
+        this.customerType = customerType;
     }
 }

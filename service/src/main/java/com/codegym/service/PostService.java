@@ -20,6 +20,7 @@ public interface PostService {
             Long price,
             Boolean deal,
             Long directionId,
-            String keyword
+            String keyword,
+            Boolean customerType
     );
 }

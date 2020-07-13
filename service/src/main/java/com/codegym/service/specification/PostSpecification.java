@@ -80,6 +80,14 @@ public class PostSpecification {
         };
     }
 
+    public static Specification<Post> hasCustomerType(Boolean customerType) {
+        return (root, query, criteriaBuilder) -> {
+            if (customerType == null)
+                return criteriaBuilder.conjunction();
+            return criteriaBuilder.equal(root.get("customerType"), customerType);
+        };
+    }
+
     public static Specification<Post> textInAllColumns(String keyword, List<String> attributes) {
         return (root, query, criteriaBuilder) -> {
             if (keyword == null)
