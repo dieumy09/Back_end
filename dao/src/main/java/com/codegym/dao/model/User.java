@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name = "users")
 @JsonIgnoreProperties({
         "posts",
-        "password"
+//        "password"
 })
 public class User extends DateAudit {
     @Id
