@@ -98,4 +98,13 @@ public class PostSpecification {
                     .toArray(Predicate[]::new));
         };
     }
+
+    public static Specification<Post> hasDirection(String direction) {
+        System.out.println(direction);
+        return (root, query, criteriaBuilder) -> {
+            if (direction == null)
+                return criteriaBuilder.conjunction();
+            return criteriaBuilder.like(root.join("direction").get("name"), "%" + direction + "%");
+        };
+    }
 }
