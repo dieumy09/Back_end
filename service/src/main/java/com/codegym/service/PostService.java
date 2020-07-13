@@ -23,4 +23,5 @@ public interface PostService {
             String keyword,
             Boolean customerType
     );
+    Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
 }
