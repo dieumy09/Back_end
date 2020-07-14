@@ -10,7 +10,9 @@ import java.util.Set;
 @Table(name = "users")
 @JsonIgnoreProperties({
         "posts",
-        "password"
+        "password",
+        "comments",
+        "replies"
 })
 public class User extends DateAudit {
     @Id
@@ -45,6 +47,13 @@ public class User extends DateAudit {
     @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Comment> comments;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user")
+    private Set<Reply> replies;
+
     @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_roles_user")),
@@ -55,7 +64,7 @@ public class User extends DateAudit {
     public User() {
     }
 
-    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated) {
+    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated, Set<Comment> comments, Set<Reply> replies) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -64,6 +73,8 @@ public class User extends DateAudit {
         this.avatar = avatar;
         this.status = status;
         this.activated = activated;
+        this.comments = comments;
+        this.replies = replies;
     }
 
     public Long getId() {
@@ -152,5 +163,21 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public Set<Reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(Set<Reply> replies) {
+        this.replies = replies;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }

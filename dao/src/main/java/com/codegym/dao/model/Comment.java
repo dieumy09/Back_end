@@ -1,16 +1,18 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
 @Table(name = "comment")
-@JsonIgnoreProperties({
-        "replies"
-})
+//@JsonIgnoreProperties({
+//        "replies"
+//})
 public class Comment extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,22 +22,30 @@ public class Comment extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 1")
     private boolean status = true;
 
-    @OneToMany(
-            mappedBy = "comment",
-            fetch = FetchType.LAZY,
-            cascade = { CascadeType.ALL })
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Reply> replies;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {
+            CascadeType.MERGE
+    })
     @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_comment_post"))
+    @JsonBackReference
     private Post post;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_comment_user"))
+    private User user;
 
     public Comment() {
     }
 
-    public Comment(String content, boolean status) {
+    public Comment(String content, boolean status, Set<Reply> replies, Post post, User user) {
         this.content = content;
         this.status = status;
+        this.replies = replies;
+        this.post = post;
+        this.user = user;
     }
 
     public Long getId() {
@@ -76,5 +86,13 @@ public class Comment extends DateAudit {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

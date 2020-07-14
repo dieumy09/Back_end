@@ -23,18 +23,23 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAllCategories(Pageable pageable) {
+    public ResponseEntity<Object> findAllComments(Pageable pageable) {
         return new ResponseEntity<>(commentService.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Object> findRepositoryById(@PathVariable Long id) {
+    public ResponseEntity<Object> findCommentById(@PathVariable Long id) {
         Comment comment = commentService.findById(id);
         if (comment == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this comment!"), HttpStatus.NOT_FOUND);
         } else  {
             return new ResponseEntity<>(comment, HttpStatus.OK);
         }
+    }
+
+    @GetMapping(value = "/{id}/post")
+    public ResponseEntity<Object> findCommentByPostId(@PathVariable Long id, Pageable pageable) {
+        return new ResponseEntity<>(commentService.findByPostId(id, pageable), HttpStatus.OK);
     }
 
     @PostMapping

@@ -19,7 +19,7 @@ public class Post extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50)")
     private String title;
 
-    @Column(name = "property_condition")
+    @Column(name = "property_condition", columnDefinition = "TINYINT(1)")
     private boolean condition;
 
     @Column(columnDefinition = "NVARCHAR(100)")
@@ -71,6 +71,7 @@ public class Post extends DateAudit {
     private Set<PostImage> postImages;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Comment> comments;
 
     public Post() {

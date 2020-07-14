@@ -41,6 +41,11 @@ public class ReplyController {
         return new ResponseEntity<>(reply,HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{id}/comment")
+    public ResponseEntity<Object> finRepliesByCommentId(@PathVariable Long id, Pageable pageable) {
+        return new ResponseEntity<>(replyService.findRepliesByComment(id, pageable), HttpStatus.OK);
+    }
+
     //-------------------Create a Reply--------------------------------------------------------
 
     @PostMapping
