@@ -6,10 +6,9 @@ import com.codegym.dao.repository.PostImageRepository;
 import com.codegym.service.PostImageService;
 import com.codegym.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -29,8 +28,8 @@ public class PostImageServiceImpl implements PostImageService {
     }
 
     @Override
-    public Page<PostImage> findAll(Pageable pageable) {
-        return postImageRepository.findAll(pageable);
+    public List<PostImage> findAll() {
+        return postImageRepository.findAll();
     }
 
     @Override

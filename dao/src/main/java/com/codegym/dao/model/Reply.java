@@ -1,15 +1,12 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "reply")
-@JsonIgnoreProperties({
-        "posts"
-})
 public class Reply extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,20 +15,26 @@ public class Reply extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String content;
 
-    @Column(columnDefinition = "BIT(1) default 1")
-    private boolean status;
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean status = true;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "comment_id", foreignKey = @ForeignKey(name = "FK_reply_comment"))
+    @JsonBackReference
     private Comment comment;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_reply_user"))
+    private User user;
 
     public Reply() {
     }
 
-    public Reply(String content, boolean status, Comment comment) {
+    public Reply(String content, boolean status, Comment comment, User user) {
         this.content = content;
         this.status = status;
         this.comment = comment;
+        this.user = user;
     }
 
     public Long getId() {
@@ -60,6 +63,14 @@ public class Reply extends DateAudit {
 
     public Comment getComment() {
         return comment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setComment(Comment comment) {
