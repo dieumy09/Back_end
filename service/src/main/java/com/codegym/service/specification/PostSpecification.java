@@ -80,6 +80,14 @@ public class PostSpecification {
         };
     }
 
+    public static Specification<Post> hasCustomerType(Boolean customerType) {
+        return (root, query, criteriaBuilder) -> {
+            if (customerType == null)
+                return criteriaBuilder.conjunction();
+            return criteriaBuilder.equal(root.get("customerType"), customerType);
+        };
+    }
+
     public static Specification<Post> textInAllColumns(String keyword, List<String> attributes) {
         return (root, query, criteriaBuilder) -> {
             if (keyword == null)
@@ -88,6 +96,15 @@ public class PostSpecification {
                     .filter(a -> attributes.contains(a.getName()))
                     .map(a -> criteriaBuilder.like(root.get(a.getName()), "%" + keyword + "%"))
                     .toArray(Predicate[]::new));
+        };
+    }
+
+    public static Specification<Post> hasDirection(String direction) {
+        System.out.println(direction);
+        return (root, query, criteriaBuilder) -> {
+            if (direction == null)
+                return criteriaBuilder.conjunction();
+            return criteriaBuilder.like(root.join("direction").get("name"), "%" + direction + "%");
         };
     }
 }
