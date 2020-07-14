@@ -65,14 +65,12 @@ public class PostImageController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deletePostImage(@PathVariable Long id) {
-//        PostImage postImage = postImageService.findById(id);
-//        if (postImage == null){
-//            return new ResponseEntity<>(new ApiResponse(false, "Can not find post image!"), HttpStatus.NOT_FOUND);
-//        } else {
-//            postImageService.deleteById(id);
-//            return new ResponseEntity<>(new ApiResponse(true, "Delete post image successfully!"), HttpStatus.OK);
-//        }
-        postImageService.deleteById(id);
-        return new ResponseEntity<>(new ApiResponse(true, "Delete post image successfully!"), HttpStatus.OK);
+        PostImage postImage = postImageService.findById(id);
+        if (postImage == null){
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find post image!"), HttpStatus.NOT_FOUND);
+        } else {
+            postImageService.deleteById(id);
+            return new ResponseEntity<>(new ApiResponse(true, "Delete post image successfully!"), HttpStatus.OK);
+        }
     }
 }
