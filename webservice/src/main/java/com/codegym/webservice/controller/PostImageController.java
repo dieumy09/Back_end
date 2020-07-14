@@ -23,8 +23,8 @@ public class PostImageController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAllPostImages(Pageable pageable) {
-        return new ResponseEntity<>(postImageService.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<Object> findAllPostImages() {
+        return new ResponseEntity<>(postImageService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
