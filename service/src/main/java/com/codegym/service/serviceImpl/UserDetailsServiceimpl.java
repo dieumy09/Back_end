@@ -1,5 +1,7 @@
 package com.codegym.service.serviceImpl;
 
+
+import com.codegym.dao.model.ERole;
 import com.codegym.dao.model.Role;
 import com.codegym.dao.model.User;
 import com.codegym.dao.repository.UserRepository;
@@ -15,25 +17,31 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Service
 public class UserDetailsServiceimpl implements UserDetailsService {
+
 
     @Autowired
     UserRepository userRepository;
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
+//
+//        return UserDetailsImpl.build(user);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with email: " + username);
+            throw new UsernameNotFoundException("User not found with email: " + email);
         }
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         Set<Role> roles = user.getRoles();
         for(Role role: roles){
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName().toString()));
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
-                grantedAuthorities);
+        return UserDetailsImpl.build(user);
     }
 }
+
+
