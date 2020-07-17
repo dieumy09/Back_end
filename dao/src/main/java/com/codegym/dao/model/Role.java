@@ -15,8 +15,9 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "NVARCHAR(50)")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "NVARCHAR(50)", name = "role")
+    private ERole roleName;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
@@ -24,9 +25,12 @@ public class Role {
     public Role() {
     }
 
-    public Role(String role) {
-        this.role = role;
+    public Role(Long id, ERole roleName, Set<User> users) {
+        this.id = id;
+        this.roleName = roleName;
+        this.users = users;
     }
+
 
     public Long getId() {
         return id;
@@ -36,12 +40,13 @@ public class Role {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public ERole getRoleName() {
+        return roleName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+
+    public void setRoleName(ERole role) {
+        this.roleName = role;
     }
 
     public Set<User> getUsers() {

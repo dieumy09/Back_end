@@ -1,11 +1,9 @@
 package com.codegym.service;
 
-import com.codegym.dao.DTO.UserDTO;
 import com.codegym.dao.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
     Page<User> findAll(Pageable pageable);
@@ -15,6 +13,7 @@ public interface UserService {
     void save(User user);
 
     void deleteById(Long id);
+
 
 
 }
