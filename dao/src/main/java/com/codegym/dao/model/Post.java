@@ -1,10 +1,12 @@
 package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Set;
 
 @Entity
@@ -18,74 +20,62 @@ public class Post extends DateAudit {
     private Long id;
 
     @Column(columnDefinition = "NVARCHAR(50)")
+    @NotBlank
+    @Size(max = 50)
     private String title;
 
-    @Column(name = "property_condition")
+    @Column(name = "property_condition", columnDefinition = "TINYINT(1)")
     private boolean condition;
 
     @Column(columnDefinition = "NVARCHAR(100)")
+    @NotBlank
+    @Size(max = 100)
     private String address;
 
+    @NotNull
+    @Min(0)
     private Double area;
 
+    @NotNull
+    @Min(0)
     private Long price;
 
-    @Column(columnDefinition = "BIT(1) default 1")
-    private boolean deal;
+    @Column(columnDefinition = "TINYINT(1) default 0")
+    private boolean deal = false;
 
     private Long viewCount;
 
     @Column(columnDefinition = "TEXT")
+    @NotBlank
+    @Size(max = 65535)
     private String content;
 
-    @Column(columnDefinition = "BIT(1) default 1")
-    private boolean status;
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean status = true;
 
-    @Column(columnDefinition = "BIT(1) default 0")
+    @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean approved;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean customerType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_type_id", foreignKey = @ForeignKey(name = "FK_post_post_type"))
     private PostType postType;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_id", foreignKey = @ForeignKey(name = "FK_post_region"))
     private Region region;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "direction_id", foreignKey = @ForeignKey(name = "FK_post_direction"))
     private Direction direction;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
-    })
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "FK_post_category"))
     private Category category;
 
@@ -94,12 +84,13 @@ public class Post extends DateAudit {
     private Set<PostImage> postImages;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Comment> comments;
 
     public Post() {
     }
 
-    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, User user, PostType postType, Region region, Direction direction, Category category) {
+    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, boolean customerType, User user, PostType postType, Region region, Direction direction, Category category) {
         this.title = title;
         this.condition = condition;
         this.address = address;
@@ -110,6 +101,7 @@ public class Post extends DateAudit {
         this.content = content;
         this.status = status;
         this.approved = approved;
+        this.customerType = customerType;
         this.user = user;
         this.postType = postType;
         this.region = region;
@@ -261,5 +253,11 @@ public class Post extends DateAudit {
         this.comments = comments;
     }
 
+    public boolean isCustomerType() {
+        return customerType;
+    }
 
+    public void setCustomerType(boolean customerType) {
+        this.customerType = customerType;
+    }
 }

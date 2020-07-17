@@ -15,21 +15,22 @@ public class PostImage extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
     private String image;
 
+    @Column(columnDefinition = "TINYINT(1) default 1")
+    private boolean status = true;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
+            CascadeType.MERGE
     })
-    @JoinColumn(name = "post_id", nullable = false, foreignKey = @ForeignKey(name = "FK_post_image_post"))
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_post_image_post"))
     @JsonBackReference
     private Post post;
 
     public PostImage() {
     }
 
-    public PostImage(String image, Post post) {
+    public PostImage(String image, boolean status, Post post) {
         this.image = image;
+        this.status = status;
         this.post = post;
     }
 
@@ -47,6 +48,14 @@ public class PostImage extends DateAudit {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public Post getPost() {
