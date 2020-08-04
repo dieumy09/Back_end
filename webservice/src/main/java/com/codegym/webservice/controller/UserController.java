@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,6 +40,8 @@ public class UserController {
         this.postService = postService;
     }
 
+    @Autowired
+    PasswordEncoder encoder;
 
     //-------------------Get All Users--------------------------------------------------------
 
@@ -75,17 +78,46 @@ public class UserController {
 
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-        if (userService.findById(id) == null) {
+        User currentUser = userService.findById(id);
+
+        if (currentUser == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
         }
-        userService.save(user);
+
+        currentUser.setAvatar(user.getAvatar());
+        currentUser.setName(user.getName());
+        currentUser.setAddress(user.getAddress());
+        currentUser.setPhoneNumber(user.getPhoneNumber());
+
+        userService.save(currentUser);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(user.getId()).toUri();
+                .buildAndExpand(currentUser.getId()).toUri();
         return ResponseEntity.created(location)
-                .body(user);
+                .body(currentUser);
+    }
+
+    @PatchMapping("/{id}/changePassword")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, String currentPassword, String newPassword) {
+        User currentUser = userService.findById(id);
+
+        if (currentUser == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
+        }
+
+        if (encoder.matches(currentPassword, currentUser.getPassword())) {
+            currentUser.setPassword(encoder.encode(newPassword));
+            userService.save(currentUser);
+//            URI location = ServletUriComponentsBuilder
+//                    .fromCurrentRequest()
+//                    .path("/{id}")
+//                    .buildAndExpand(currentUser.getId()).toUri();
+//            return ResponseEntity.created(location)
+//                    .body(currentUser);
+            return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ApiResponse(false, "The password is incorrect!"), HttpStatus.NOT_MODIFIED);
     }
 
     //-------------------Delete a User--------------------------------------------------------
@@ -146,6 +178,4 @@ public class UserController {
     public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault(value = 10) Pageable pageable) {
         return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
     }
-
-
 }
