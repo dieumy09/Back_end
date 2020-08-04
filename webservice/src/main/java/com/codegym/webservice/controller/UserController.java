@@ -1,10 +1,13 @@
 package com.codegym.webservice.controller;
 
+import com.codegym.dao.model.AccountReport;
 import com.codegym.dao.model.Post;
 import com.codegym.dao.model.User;
 import com.codegym.service.PostService;
 import com.codegym.service.UserService;
 import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.BlockUserRequest;
+import com.codegym.webservice.payload.UserSearchRequest;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,12 +27,14 @@ import java.net.URI;
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
     private UserService userService;
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
 
     private PostService postService;
+
     @Autowired
     public void setPostService(PostService postService) {
         this.postService = postService;
@@ -41,19 +46,19 @@ public class UserController {
     //-------------------Get All Users--------------------------------------------------------
 
     @GetMapping()
-    public ResponseEntity<Object> findAllUsers(Pageable pageable){
+    public ResponseEntity<Object> findAllUsers(Pageable pageable) {
         return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
     }
 
     //-------------------Get One User By Id--------------------------------------------------------
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> findUserById(@PathVariable("id")Long id){
+    public ResponseEntity<Object> findUserById(@PathVariable("id") Long id) {
         User user = userService.findById(id);
-        if (user == null){
+        if (user == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     //-------------------Create a User--------------------------------------------------------
@@ -118,9 +123,9 @@ public class UserController {
     //-------------------Delete a User--------------------------------------------------------
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id){
+    public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
         User user = userService.findById(id);
-        if (user == null){
+        if (user == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
         }
         userService.deleteById(id);
@@ -133,15 +138,44 @@ public class UserController {
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
         Page<Post> posts = null;
         User user = userService.findById(id);
-        if (user == null){
+        if (user == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
         }
         if (search != null) {
             posts = postService.findPostsByUser_IdAndTitleContaining(id, search, pageable);
-        }
-        else {
+        } else {
             posts = postService.findPostsByUserId(id, pageable);
         }
-        return new ResponseEntity<>(posts,HttpStatus.OK);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/{id}/block")
+    public ResponseEntity<Object> blockUserById(@PathVariable Long id, @RequestBody BlockUserRequest blockUserRequest) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+        }
+        AccountReport accountReport = new AccountReport();
+        accountReport.setUser(user);
+        accountReport.setReason(blockUserRequest.getReason());
+        userService.blockById(id, accountReport);
+        return ResponseEntity.ok().body(new ApiResponse(true, "Block account successfully!"));
+    }
+
+    @PostMapping("/{id}/unblock")
+    public ResponseEntity<Object> unblockUserById(@PathVariable Long id) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+        }
+        userService.unblockById(id);
+        return ResponseEntity.ok().body(new ApiResponse(true, "Unblock account successfully!"));
+    }
+
+
+    @PostMapping("/search")
+    public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault(value = 10) Pageable pageable) {
+        return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
     }
 }

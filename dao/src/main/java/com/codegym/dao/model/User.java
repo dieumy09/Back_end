@@ -4,13 +4,15 @@ import com.codegym.dao.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @JsonIgnoreProperties({
         "posts",
-        "password"
+        "password",
+        "accountReports"
 })
 public class User extends DateAudit {
     @Id
@@ -29,7 +31,7 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
 
-    @Column(columnDefinition = "NVARCHAR(255) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(61) NOT NULL")
     private String password;
 
     @Column(columnDefinition = "NVARCHAR(255)")
@@ -51,6 +53,10 @@ public class User extends DateAudit {
             inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_users_roles_role"))
     )
     private Set<Role> roles;
+
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<AccountReport> accountReports;
 
     public User() {
     }
@@ -162,5 +168,16 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Set<AccountReport> getAccountReports() {
+        return accountReports;
+    }
+
+    public void addAccountReport(AccountReport accountReport) {
+        if (accountReports == null) {
+            accountReports = new HashSet<>();
+        }
+        accountReports.add(accountReport);
     }
 }
