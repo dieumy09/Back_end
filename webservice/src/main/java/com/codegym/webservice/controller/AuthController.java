@@ -8,11 +8,13 @@ import com.codegym.dao.model.User;
 import com.codegym.dao.repository.RoleRepository;
 import com.codegym.dao.repository.UserRepository;
 import com.codegym.service.serviceImpl.UserDetailsImpl;
+import com.codegym.webservice.payload.ApiResponse;
 import com.codegym.webservice.payload.request.SignInRequest;
 import com.codegym.webservice.payload.request.SignUpRequest;
 import com.codegym.webservice.payload.response.JwtResponse;
 import com.codegym.webservice.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,12 +22,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -114,4 +115,5 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
 }
