@@ -29,10 +29,10 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
 
-    @Column(columnDefinition = "NVARCHAR(61) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(255) NOT NULL")
     private String password;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String avatar;
 
     @Column(columnDefinition = "TINYINT(1) default 1")

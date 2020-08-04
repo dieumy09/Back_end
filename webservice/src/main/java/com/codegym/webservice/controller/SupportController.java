@@ -44,7 +44,7 @@ public class SupportController {
     //-------------------Create a Support--------------------------------------------------------
 
     @PostMapping
-    public ResponseEntity<Object> createSupport(@RequestBody Support support) {
+        public ResponseEntity<Object> createSupport(@RequestBody Support support) {
         supportService.save(support);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()

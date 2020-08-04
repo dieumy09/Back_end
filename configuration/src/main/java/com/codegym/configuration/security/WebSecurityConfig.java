@@ -1,4 +1,4 @@
-package com.codegym.configuration;
+package com.codegym.configuration.security;
 
 import com.codegym.configuration.security.AuthEntryPointJwt;
 import com.codegym.configuration.security.AuthTokenFilter;
