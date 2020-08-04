@@ -13,13 +13,14 @@ public class Support extends DateAudit {
     private Long id;
 
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
-    private String title;
+    private String name;
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String phoneNumber;
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
-    private String reason;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "reason_id", foreignKey = @ForeignKey (name = "FK_support_reason"))
+    private Reason reason;
     @Column(columnDefinition = "TEXT NOT NULL")
     private String content;
 
@@ -29,8 +30,8 @@ public class Support extends DateAudit {
     public Support() {
     }
 
-    public Support(String title, String email, String phoneNumber, String reason, String content, boolean status) {
-        this.title = title;
+    public Support(String name, String email, String phoneNumber, Reason reason, String content, boolean status) {
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.reason = reason;
@@ -46,12 +47,12 @@ public class Support extends DateAudit {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -70,11 +71,11 @@ public class Support extends DateAudit {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getReason() {
+    public Reason getReason() {
         return reason;
     }
 
-    public void setReason(String reason) {
+    public void setReason(Reason reason) {
         this.reason = reason;
     }
 

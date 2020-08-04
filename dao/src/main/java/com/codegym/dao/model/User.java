@@ -31,7 +31,7 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(61) NOT NULL")
     private String password;
 
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
@@ -43,6 +43,7 @@ public class User extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean activated;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 
@@ -59,6 +60,16 @@ public class User extends DateAudit {
 
     public User() {
     }
+
+    public User(String name, String email, String address, String phoneNumber, String encode) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.password = encode;
+    }
+
+
 
     public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated) {
         this.name = name;
