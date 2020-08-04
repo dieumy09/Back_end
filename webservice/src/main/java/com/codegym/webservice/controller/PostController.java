@@ -1,7 +1,9 @@
 package com.codegym.webservice.controller;
 
 import com.codegym.dao.model.Post;
+import com.codegym.dao.model.User;
 import com.codegym.service.PostService;
+import com.codegym.service.UserService;
 import com.codegym.webservice.payload.ApiResponse;
 import com.codegym.webservice.payload.PostSearchByYearRequest;
 import com.codegym.webservice.payload.PostSearchRequest;
@@ -22,15 +24,30 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/posts")
 public class PostController {
     private PostService postService;
+    private UserService userService;
 
     @Autowired
     public void setPostService(PostService postService) {
         this.postService = postService;
     }
 
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping
     public ResponseEntity<Object> findAllPosts(Pageable pageable) {
         return new ResponseEntity<>(postService.findAll(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/user/{userId}")
+    public ResponseEntity<Object> findPostsByUserId(@PageableDefault(value = 5) Pageable pageable, @PathVariable Long userId) {
+        User user = userService.findById(userId);
+        if (user == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(postService.findPostsByUserId(userId, pageable), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
@@ -81,7 +98,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/searchAll")
-    public ResponseEntity<Object> findAllBySearchModal(@PageableDefault(value = 8) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+    public ResponseEntity<Object> findAllBySearchModal(@PageableDefault(value = 1) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
         String direction = "";
         if (postSearchRequest.getYear() != null) {
             int year = Integer.parseInt(postSearchRequest.getYear());
