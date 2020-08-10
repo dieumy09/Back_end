@@ -7,8 +7,8 @@ import com.codegym.service.PostService;
 import com.codegym.service.UserService;
 import com.codegym.webservice.payload.ApiResponse;
 import com.codegym.webservice.payload.BlockUserRequest;
+import com.codegym.webservice.payload.ChangePasswordToken;
 import com.codegym.webservice.payload.UserSearchRequest;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -40,8 +39,15 @@ public class UserController {
         this.postService = postService;
     }
 
+    private PasswordEncoder encoder;
+    
     @Autowired
-    PasswordEncoder encoder;
+    public void setEncoder(PasswordEncoder encoder) {
+        this.encoder = encoder;
+    }
+
+    private final String NOT_FOUND_USER = "Cannot find this user!";
+
 
     //-------------------Get All Users--------------------------------------------------------
 
@@ -56,7 +62,7 @@ public class UserController {
     public ResponseEntity<Object> findUserById(@PathVariable("id") Long id) {
         User user = userService.findById(id);
         if (user == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -74,14 +80,14 @@ public class UserController {
                 .body(user);
     }
 
-    //-------------------Update a User--------------------------------------------------------
+    //-------------------Update User Profile--------------------------------------------------------
 
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) {
         User currentUser = userService.findById(id);
 
         if (currentUser == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
 
         currentUser.setAvatar(user.getAvatar());
@@ -98,26 +104,22 @@ public class UserController {
                 .body(currentUser);
     }
 
+    //-------------------Change User's Password--------------------------------------------------------
+
     @PatchMapping("/{id}/changePassword")
-    public ResponseEntity<?> changePassword(@PathVariable Long id, String currentPassword, String newPassword) {
-        User currentUser = userService.findById(id);
+    public ResponseEntity<Object> changePassword(@PathVariable Long id, @RequestBody ChangePasswordToken changePasswordToken) {
+        User user = userService.findById(id);
 
-        if (currentUser == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
+        if (user == null) {
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
 
-        if (encoder.matches(currentPassword, currentUser.getPassword())) {
-            currentUser.setPassword(encoder.encode(newPassword));
-            userService.save(currentUser);
-//            URI location = ServletUriComponentsBuilder
-//                    .fromCurrentRequest()
-//                    .path("/{id}")
-//                    .buildAndExpand(currentUser.getId()).toUri();
-//            return ResponseEntity.created(location)
-//                    .body(currentUser);
-            return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        if (!encoder.matches(changePasswordToken.getCurrentPassword(), user.getPassword())) {
+            return new ResponseEntity<>(new ApiResponse(false, "The password is incorrect!"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new ApiResponse(false, "The password is incorrect!"), HttpStatus.NOT_MODIFIED);
+        user.setPassword(encoder.encode(changePasswordToken.getNewPassword()));
+        userService.save(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     //-------------------Delete a User--------------------------------------------------------
@@ -126,7 +128,7 @@ public class UserController {
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
         User user = userService.findById(id);
         if (user == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find this user!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         userService.deleteById(id);
         return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
@@ -136,10 +138,10 @@ public class UserController {
 
     @GetMapping("/{id}/posts")
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
-        Page<Post> posts = null;
+        Page<Post> posts;
         User user = userService.findById(id);
         if (user == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         if (search != null) {
             posts = postService.findPostsByUser_IdAndTitleContaining(id, search, pageable);
@@ -154,7 +156,7 @@ public class UserController {
     public ResponseEntity<Object> blockUserById(@PathVariable Long id, @RequestBody BlockUserRequest blockUserRequest) {
         User user = userService.findById(id);
         if (user == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         AccountReport accountReport = new AccountReport();
         accountReport.setUser(user);
@@ -167,7 +169,7 @@ public class UserController {
     public ResponseEntity<Object> unblockUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         if (user == null) {
-            return new ResponseEntity<>(new ApiResponse(false, "Can not find user!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         userService.unblockById(id);
         return ResponseEntity.ok().body(new ApiResponse(true, "Unblock account successfully!"));
@@ -175,7 +177,7 @@ public class UserController {
 
 
     @PostMapping("/search")
-    public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault(value = 10) Pageable pageable) {
+    public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault() Pageable pageable) {
         return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
     }
 }
