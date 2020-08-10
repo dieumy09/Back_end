@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
@@ -17,7 +18,8 @@ public class Comment extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "TEXT NOT NULL")
+    @NotBlank
     private String content;
     @Column(columnDefinition = "TINYINT(1) default 1")
     private boolean status = true;
