@@ -5,7 +5,6 @@ import com.codegym.dao.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 public interface UserService {
     Page<User> findAll(Pageable pageable);
 
@@ -20,6 +19,4 @@ public interface UserService {
     void unblockById(Long id);
 
     Page<User> searchUser(Pageable pageable, String keyword);
-
-
 }

@@ -1,7 +1,5 @@
 package com.codegym.service.serviceImpl;
 
-
-import com.codegym.dao.model.ERole;
 import com.codegym.dao.model.Role;
 import com.codegym.dao.model.User;
 import com.codegym.dao.repository.UserRepository;
@@ -17,11 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Service
 public class UserDetailsServiceimpl implements UserDetailsService {
-
-
     @Autowired
     UserRepository userRepository;
 
@@ -43,5 +38,4 @@ public class UserDetailsServiceimpl implements UserDetailsService {
         return UserDetailsImpl.build(user);
     }
 }
-
 

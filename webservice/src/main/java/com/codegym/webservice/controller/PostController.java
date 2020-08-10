@@ -9,7 +9,9 @@ import com.codegym.webservice.payload.PostSearchByYearRequest;
 import com.codegym.webservice.payload.PostSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/posts")
@@ -36,10 +37,14 @@ public class PostController {
         this.userService = userService;
     }
 
+    //-------------------Get All Posts--------------------------------------------------------
+
     @GetMapping
     public ResponseEntity<Object> findAllPosts(Pageable pageable) {
         return new ResponseEntity<>(postService.findAll(pageable), HttpStatus.OK);
     }
+
+    //-------------------Get One Post By Id--------------------------------------------------------
 
     @GetMapping(value = "/user/{userId}")
     public ResponseEntity<Object> findPostsByUserId(@PageableDefault(value = 5) Pageable pageable, @PathVariable Long userId) {
@@ -60,6 +65,7 @@ public class PostController {
         }
     }
 
+    //-------------------Create a Post--------------------------------------------------------
     @PostMapping
     public ResponseEntity<Object> createPost(@RequestBody Post post) {
         postService.save(post);
@@ -71,6 +77,7 @@ public class PostController {
                 .body(post);
     }
 
+    //-------------------Update a Post by id--------------------------------------------------------
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable Long id, @Valid @RequestBody Post post) {
         post.setId(id);
@@ -86,6 +93,7 @@ public class PostController {
                 .body(post);
     }
 
+    //-------------------Delete a Post by id--------------------------------------------------------
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -98,8 +106,11 @@ public class PostController {
     }
 
     @PostMapping(value = "/searchAll")
-    public ResponseEntity<Object> findAllBySearchModal(@PageableDefault(value = 1) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+    public ResponseEntity<Object> findAllBySearchModal(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page, @RequestBody PostSearchRequest postSearchRequest) {
         String direction = "";
+        int size = 9;
+        Sort sortable = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(page, size, sortable);
         if (postSearchRequest.getYear() != null) {
             int year = Integer.parseInt(postSearchRequest.getYear());
             if (((year % 4 == 0) && (year % 100 != 0)) ||

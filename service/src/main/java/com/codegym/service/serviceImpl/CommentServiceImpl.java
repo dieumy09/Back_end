@@ -30,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Page<Comment> findByPostId(Long id, Pageable pageable) {
-        return commentRepository.findCommentsByPost_Id(id, pageable);
+        return commentRepository.findCommentsByPost_IdOrderByCreatedAtDesc(id, pageable);
     }
 
 

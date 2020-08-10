@@ -1,7 +1,5 @@
 package com.codegym.configuration.security;
 
-import com.codegym.configuration.security.AuthEntryPointJwt;
-import com.codegym.configuration.security.AuthTokenFilter;
 import com.codegym.service.serviceImpl.UserDetailsServiceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -60,4 +58,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-

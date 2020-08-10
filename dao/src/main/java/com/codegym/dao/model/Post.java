@@ -2,9 +2,6 @@ package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.*;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -57,7 +54,7 @@ public class Post extends DateAudit {
     private boolean approved;
 
     @Column(columnDefinition = "TINYINT(1) default 1")
-    private boolean customerType;
+    private boolean customerType = true;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_post_user"))

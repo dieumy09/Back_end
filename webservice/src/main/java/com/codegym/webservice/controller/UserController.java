@@ -163,17 +163,19 @@ public class UserController {
      */
     @GetMapping("/{id}/posts")
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
-        Page<Post> posts;
+        Page<Post> posts = null;
+
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         if (search != null) {
             posts = postService.findPostsByUser_IdAndTitleContaining(id, search, pageable);
-        } else {
+        }
+        else {
             posts = postService.findPostsByUserId(id, pageable);
         }
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        return new ResponseEntity<>(posts,HttpStatus.OK);
     }
 
 

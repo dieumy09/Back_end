@@ -18,10 +18,7 @@ public class Direction {
     private String name;
 
     @OneToMany(mappedBy = "direction", fetch = FetchType.LAZY, cascade = {
-            CascadeType.DETACH,
-            CascadeType.MERGE,
-            CascadeType.PERSIST,
-            CascadeType.REFRESH
+            CascadeType.ALL
     })
     private Set<Post> posts;
 
