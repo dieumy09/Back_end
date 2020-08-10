@@ -138,33 +138,20 @@ public class UserController {
 
     @GetMapping("/{id}/posts")
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
-<<<<<<< HEAD
         Page<Post> posts = null;
-=======
-        Page<Post> posts;
->>>>>>> f8cedb3e9d3334f882c48c1589566ed0a7797605
+
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         if (search != null) {
             posts = postService.findPostsByUser_IdAndTitleContaining(id, search, pageable);
-<<<<<<< HEAD
         }
         else {
             posts = postService.findPostsByUserId(id, pageable);
         }
         return new ResponseEntity<>(posts,HttpStatus.OK);
     }
-
-
-=======
-        } else {
-            posts = postService.findPostsByUserId(id, pageable);
-        }
-        return new ResponseEntity<>(posts, HttpStatus.OK);
-    }
-
 
     @PostMapping("/{id}/block")
     public ResponseEntity<Object> blockUserById(@PathVariable Long id, @RequestBody BlockUserRequest blockUserRequest) {
@@ -194,5 +181,4 @@ public class UserController {
     public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault() Pageable pageable) {
         return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
     }
->>>>>>> f8cedb3e9d3334f882c48c1589566ed0a7797605
 }

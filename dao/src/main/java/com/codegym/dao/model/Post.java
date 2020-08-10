@@ -2,17 +2,6 @@ package com.codegym.dao.model;
 
 import com.codegym.dao.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.*;
-<<<<<<< HEAD
-import javafx.beans.DefaultProperty;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-=======
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
->>>>>>> f8cedb3e9d3334f882c48c1589566ed0a7797605
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Set;
