@@ -4,6 +4,7 @@ import com.codegym.dao.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,8 +12,7 @@ import java.util.Set;
 @JsonIgnoreProperties({
         "posts",
         "password",
-        "comments",
-        "replies"
+        "accountReports"
 })
 public class User extends DateAudit {
     @Id
@@ -22,7 +22,7 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(100) NOT NULL")
     private String address;
 
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
@@ -31,10 +31,10 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String email;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(61) NOT NULL")
     private String password;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String avatar;
 
     @Column(columnDefinition = "TINYINT(1) default 1")
@@ -47,13 +47,6 @@ public class User extends DateAudit {
     @OneToMany(mappedBy = "user")
     private Set<Post> posts;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Comment> comments;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "user")
-    private Set<Reply> replies;
-
     @ManyToMany
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_roles_user")),
@@ -61,10 +54,24 @@ public class User extends DateAudit {
     )
     private Set<Role> roles;
 
+
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    private Set<AccountReport> accountReports;
+
     public User() {
     }
 
-    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated, Set<Comment> comments, Set<Reply> replies) {
+    public User(String name, String email, String address, String phoneNumber, String encode) {
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.password = encode;
+    }
+
+
+
+    public User(String name, String address, String phoneNumber, String email, String password, String avatar, boolean status, boolean activated) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -73,8 +80,6 @@ public class User extends DateAudit {
         this.avatar = avatar;
         this.status = status;
         this.activated = activated;
-        this.comments = comments;
-        this.replies = replies;
     }
 
     public Long getId() {
@@ -165,19 +170,14 @@ public class User extends DateAudit {
         this.roles = roles;
     }
 
-    public Set<Comment> getComments() {
-        return comments;
+    public Set<AccountReport> getAccountReports() {
+        return accountReports;
     }
 
-    public Set<Reply> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(Set<Reply> replies) {
-        this.replies = replies;
-    }
-
-    public void setComments(Set<Comment> comments) {
-        this.comments = comments;
+    public void addAccountReport(AccountReport accountReport) {
+        if (accountReports == null) {
+            accountReports = new HashSet<>();
+        }
+        accountReports.add(accountReport);
     }
 }

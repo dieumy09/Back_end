@@ -1,4 +1,4 @@
 package com.codegym.common;
 
-public class common {
+public class Common {
 }
