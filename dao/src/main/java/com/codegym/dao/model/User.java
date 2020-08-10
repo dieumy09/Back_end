@@ -22,7 +22,7 @@ public class User extends DateAudit {
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
     private String name;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "NVARCHAR(100) NOT NULL")
     private String address;
 
     @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
