@@ -4,6 +4,7 @@ import com.codegym.dao.model.audit.DateAudit;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "reply")
@@ -12,7 +13,8 @@ public class Reply extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "NVARCHAR(50) NOT NULL")
+    @Column(columnDefinition = "TEXT NOT NULL")
+    @NotBlank
     private String content;
 
     @Column(columnDefinition = "TINYINT(1) default 1")

@@ -6,13 +6,18 @@ import com.codegym.webservice.payload.ApiResponse;
 import com.codegym.webservice.payload.PostSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/posts")
@@ -24,11 +29,13 @@ public class PostController {
         this.postService = postService;
     }
 
+    //-------------------Get All Posts--------------------------------------------------------
     @GetMapping
     public ResponseEntity<Object> findAllPosts(Pageable pageable) {
         return new ResponseEntity<>(postService.findAll(pageable), HttpStatus.OK);
     }
 
+    //-------------------Get One Post By Id--------------------------------------------------------
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> findPostById(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -39,6 +46,7 @@ public class PostController {
         }
     }
 
+    //-------------------Create a Post--------------------------------------------------------
     @PostMapping
     public ResponseEntity<Object> createPost(@RequestBody Post post) {
         postService.save(post);
@@ -50,8 +58,9 @@ public class PostController {
                 .body(post);
     }
 
+    //-------------------Update a Post by id--------------------------------------------------------
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody Post post) {
+    public ResponseEntity<Object> updatePost(@PathVariable Long id, @Valid @RequestBody Post post) {
         post.setId(id);
         if (postService.findById(id) == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this post!"), HttpStatus.NOT_FOUND);
@@ -65,6 +74,7 @@ public class PostController {
                 .body(post);
     }
 
+    //-------------------Delete a Post by id--------------------------------------------------------
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -77,7 +87,40 @@ public class PostController {
     }
 
     @PostMapping(value = "/searchAll")
-    public ResponseEntity<Object> findAllBySearchModal(Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+    public ResponseEntity<Object> findAllBySearchModal(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page, @RequestBody PostSearchRequest postSearchRequest) {
+        String direction = "";
+        int size = 9;
+        Sort sortable = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(page, size, sortable);
+        if (postSearchRequest.getYear() != null) {
+            int year = Integer.parseInt(postSearchRequest.getYear());
+            if (((year % 4 == 0) && (year % 100 != 0)) ||
+                    (year % 400 == 0)) {
+                if (year % 2 == 0) {
+                    direction += "Tây ";
+                } else {
+                    direction += "Đông ";
+                }
+                if (postSearchRequest.getGender()) {
+                    direction += "Nam ";
+                } else  {
+                    direction += "Bắc ";
+                }
+            } else {
+                if (year % 2 == 0 && postSearchRequest.getGender() == true) {
+                    direction += "Nam ";
+                }
+                if (year % 2 == 0 && postSearchRequest.getGender() == false) {
+                    direction += "Bắc ";
+                }
+                if (year % 2 != 0 && postSearchRequest.getGender() == true) {
+                    direction += "Tây ";
+                }
+                if (year % 2 != 0 && postSearchRequest.getGender() != false) {
+                    direction += "Đông ";
+                }
+            }
+        }
         Page<Post> posts = postService.findAllBySearchModal(
                 pageable, postSearchRequest.getCategoryId(),
                 postSearchRequest.getRegionId(),
@@ -87,11 +130,11 @@ public class PostController {
                 postSearchRequest.getPrice(),
                 postSearchRequest.getDeal(),
                 postSearchRequest.getDirectionId(),
-                postSearchRequest.getKeyword()
+                postSearchRequest.getKeyword(),
+                postSearchRequest.getCustomerType(),
+                direction
         );
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
-
 
 }
