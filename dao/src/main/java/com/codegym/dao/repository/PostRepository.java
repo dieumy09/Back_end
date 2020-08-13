@@ -10,4 +10,10 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     Page<Post> getPostsByUser_Id(Long userId, Pageable pageable);
 
     Page<Post> getPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
+
+    Iterable<Post> findByCategory_Id(Long categoryId);
+
+    Iterable<Post> findByPostType_Id(Long postTypeId);
+
+    Iterable<Post> findByRegion_Id(Long regionId);
 }
