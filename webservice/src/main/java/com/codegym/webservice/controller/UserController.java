@@ -22,6 +22,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+/**
+ * A controller used to perform CRUD and manage user of the system
+ * @Author Rhys
+ */
 @RestController
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
@@ -40,7 +44,7 @@ public class UserController {
     }
 
     private PasswordEncoder encoder;
-    
+
     @Autowired
     public void setEncoder(PasswordEncoder encoder) {
         this.encoder = encoder;
@@ -49,15 +53,20 @@ public class UserController {
     private final String NOT_FOUND_USER = "Cannot find this user!";
 
 
-    //-------------------Get All Users--------------------------------------------------------
 
+    /**
+     * @param pageable containing pagination information
+     * @return A list of all users in system
+     */
     @GetMapping()
     public ResponseEntity<Object> findAllUsers(Pageable pageable) {
         return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
     }
 
-    //-------------------Get One User By Id--------------------------------------------------------
-
+    /**
+     * @param id the id of the user needs to be found
+     * @return found user information
+     */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findUserById(@PathVariable("id") Long id) {
         User user = userService.findById(id);
@@ -67,8 +76,10 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    //-------------------Create a User--------------------------------------------------------
-
+    /**
+     * @param user information of an user
+     * @return
+     */
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         userService.save(user);
@@ -80,8 +91,12 @@ public class UserController {
                 .body(user);
     }
 
-    //-------------------Update User Profile--------------------------------------------------------
 
+    /**
+     * @param id the id of the user need to be updated
+     * @param user the variable contains data that has bean updated
+     * @return the user that has bean updated or a message if can not find user
+     */
     @PatchMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) {
         User currentUser = userService.findById(id);
@@ -104,8 +119,11 @@ public class UserController {
                 .body(currentUser);
     }
 
-    //-------------------Change User's Password--------------------------------------------------------
-
+    /**
+     * @param id the id of the user need to be changed password
+     * @param changePasswordToken the object contains current password and new password of the user
+     * @return the current user information
+     */
     @PatchMapping("/{id}/changePassword")
     public ResponseEntity<Object> changePassword(@PathVariable Long id, @RequestBody ChangePasswordToken changePasswordToken) {
         User user = userService.findById(id);
@@ -122,8 +140,11 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    //-------------------Delete a User--------------------------------------------------------
 
+    /**
+     * @param id the id of the user deleted
+     * @return information of the user that has been deleted
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
         User user = userService.findById(id);
@@ -134,8 +155,12 @@ public class UserController {
         return new ResponseEntity<>(new ApiResponse(true, "Delete user successfully!"), HttpStatus.OK);
     }
 
-    //-------------------Find Posts By UserId Pagination And Search--------------------------------------------------------
-
+    /**
+     * @param id
+     * @param pageable
+     * @param search
+     * @return
+     */
     @GetMapping("/{id}/posts")
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
         Page<Post> posts = null;
@@ -153,6 +178,12 @@ public class UserController {
         return new ResponseEntity<>(posts,HttpStatus.OK);
     }
 
+
+    /**
+     * @param id
+     * @param blockUserRequest
+     * @return
+     */
     @PostMapping("/{id}/block")
     public ResponseEntity<Object> blockUserById(@PathVariable Long id, @RequestBody BlockUserRequest blockUserRequest) {
         User user = userService.findById(id);
@@ -166,6 +197,10 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponse(true, "Block account successfully!"));
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @PostMapping("/{id}/unblock")
     public ResponseEntity<Object> unblockUserById(@PathVariable Long id) {
         User user = userService.findById(id);
@@ -177,6 +212,11 @@ public class UserController {
     }
 
 
+    /**
+     * @param userSearchRequest
+     * @param pageable
+     * @return
+     */
     @PostMapping("/search")
     public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault() Pageable pageable) {
         return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
