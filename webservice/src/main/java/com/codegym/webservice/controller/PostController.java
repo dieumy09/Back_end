@@ -44,7 +44,7 @@ public class PostController {
         return new ResponseEntity<>(postService.findAll(pageable), HttpStatus.OK);
     }
 
-    //-------------------Get One Post By Id--------------------------------------------------------
+    //-------------------Get One Post By User Id--------------------------------------------------------
 
     @GetMapping(value = "/user/{userId}")
     public ResponseEntity<Object> findPostsByUserId(@PageableDefault(value = 5) Pageable pageable, @PathVariable Long userId) {
@@ -54,6 +54,8 @@ public class PostController {
         }
         return new ResponseEntity<>(postService.findPostsByUserId(userId, pageable), HttpStatus.OK);
     }
+
+    //-------------------Get One Post By Id--------------------------------------------------------
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> findPostById(@PathVariable Long id) {
@@ -155,5 +157,4 @@ public class PostController {
         );
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
-
 }

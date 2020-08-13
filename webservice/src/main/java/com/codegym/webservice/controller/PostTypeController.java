@@ -1,6 +1,8 @@
 package com.codegym.webservice.controller;
 
+import com.codegym.dao.model.Post;
 import com.codegym.dao.model.PostType;
+import com.codegym.service.PostService;
 import com.codegym.service.PostTypeService;
 import com.codegym.webservice.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,14 @@ public class PostTypeController {
     public void setPostTypeService(PostTypeService postTypeService) {
         this.postTypeService = postTypeService;
     }
+
+    private PostService postService;
+
+    @Autowired
+    public void setPostService(PostService postService) {
+        this.postService = postService;
+    }
+
 
     @GetMapping
     public ResponseEntity<Object> findAllPostType() {
@@ -65,11 +75,15 @@ public class PostTypeController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object> deletePostType(@PathVariable Long id) {
         PostType postType = postTypeService.findById(id);
+        Iterable<Post> posts = postService.findByPostType_Id(id);
+
         if (postType == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find post type!"), HttpStatus.NOT_FOUND);
-        } else {
-            postTypeService.deleteById(id);
-            return new ResponseEntity<>(new ApiResponse(true, "Delete post type successfully!"), HttpStatus.OK);
         }
+        if (posts.iterator().hasNext()) {
+            return new ResponseEntity<>(new ApiResponse(false, "Cannot delete this post type!"), HttpStatus.BAD_REQUEST);
+        }
+        postTypeService.deleteById(id);
+        return new ResponseEntity<>(new ApiResponse(true, "Delete post type successfully!"), HttpStatus.OK);
     }
 }

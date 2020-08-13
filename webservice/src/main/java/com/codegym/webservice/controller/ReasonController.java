@@ -1,9 +1,14 @@
 package com.codegym.webservice.controller;
 
 import com.codegym.dao.model.Reason;
+import com.codegym.dao.model.Support;
 import com.codegym.service.ReasonService;
+import com.codegym.service.SupportService;
 import com.codegym.webservice.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +24,13 @@ public class ReasonController {
     @Autowired
     public void setReasonService(ReasonService reasonService) {
         this.reasonService = reasonService;
+    }
+
+    private SupportService supportService;
+
+    @Autowired
+    public void setSupportService(SupportService supportService) {
+        this.supportService = supportService;
     }
 
 

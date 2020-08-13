@@ -1,10 +1,14 @@
 package com.codegym.webservice.controller;
 
+import com.codegym.dao.model.Reason;
 import com.codegym.dao.model.Support;
+import com.codegym.service.ReasonService;
 import com.codegym.service.SupportService;
 import com.codegym.webservice.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +27,19 @@ public class SupportController {
         this.supportService = supportService;
     }
 
-    //-------------------Get All Supports--------------------------------------------------------
+
+    //-------------------Get Supports--------------------------------------------------------
 
     @GetMapping()
-    public ResponseEntity<Object> findAllSupports(Pageable pageable){
-        return new ResponseEntity<>(supportService.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<Object> findAllSupports(@RequestParam Long reasonId, @PageableDefault(size = 5) Pageable pageable){
+        Page<Support> supports = null;
+        if (reasonId == null) {
+            supports = supportService.findAll(pageable);
+            return new ResponseEntity<>(supports, HttpStatus.OK);
+        }
+
+        supports = supportService.findByReasonId(reasonId, pageable);
+        return new ResponseEntity<>(supports, HttpStatus.OK);
     }
 
     //-------------------Get One Support By Id--------------------------------------------------------
