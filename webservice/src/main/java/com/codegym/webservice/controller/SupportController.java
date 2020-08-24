@@ -4,7 +4,7 @@ import com.codegym.dao.model.Reason;
 import com.codegym.dao.model.Support;
 import com.codegym.service.ReasonService;
 import com.codegym.service.SupportService;
-import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

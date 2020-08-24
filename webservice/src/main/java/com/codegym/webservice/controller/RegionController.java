@@ -4,7 +4,7 @@ import com.codegym.dao.model.Post;
 import com.codegym.dao.model.Region;
 import com.codegym.service.PostService;
 import com.codegym.service.RegionService;
-import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

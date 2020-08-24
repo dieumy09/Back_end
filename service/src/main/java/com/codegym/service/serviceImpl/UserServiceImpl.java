@@ -1,6 +1,7 @@
 package com.codegym.service.serviceImpl;
 
 import com.codegym.dao.model.AccountReport;
+import com.codegym.dao.model.ERole;
 import com.codegym.dao.model.User;
 import com.codegym.dao.repository.UserRepository;
 import com.codegym.service.UserService;
@@ -61,7 +62,25 @@ public class UserServiceImpl implements UserService {
     public Page<User> searchUser(Pageable pageable, String keyword) {
         return userRepository.findAll(
                 Specification
-                        .where(UserSpecification.textInAllColumns(keyword, Arrays.asList("email", "phoneNumber", "name")))
+                        .where(UserSpecification.textInAllColumns(keyword, Arrays.asList("email", "phoneNumber", "name"))
+                                .and(UserSpecification.isUser()))
                 , pageable);
+    }
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Page<User> findAllAdmin(Pageable pageable) {
+        return userRepository.findAll(
+                Specification.where(UserSpecification.isAdmin()),
+                pageable
+        );
     }
 }

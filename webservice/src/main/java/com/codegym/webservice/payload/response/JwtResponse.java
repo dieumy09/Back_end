@@ -1,16 +1,18 @@
 package com.codegym.webservice.payload.response;
 
-import java.util.List;
+import com.codegym.dao.model.Role;
+
+import java.util.Set;
 
 public class JwtResponse {
     private String token;
-    private String type = "Bearer";
+    private String type = "Bearer ";
     private Long id;
     private String email;
     private String name;
-    private List<String> roles;
+    private Set<Role> roles;
 
-    public JwtResponse(String accessToken, Long id, String email, String name, List<String> roles) {
+    public JwtResponse(String accessToken, Long id, String email, String name, Set<Role> roles) {
         this.token = accessToken;
         this.id = id;
         this.email = email;
@@ -52,9 +54,10 @@ public class JwtResponse {
         this.email = email;
     }
 
-    public List<String> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
+
 
     public String getName() {
         return name;
