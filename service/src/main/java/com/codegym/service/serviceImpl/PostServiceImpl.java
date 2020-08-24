@@ -87,4 +87,19 @@ public class PostServiceImpl implements PostService {
                 , pageable);
     }
 
+    @Override
+    public Iterable<Post> findByCategory_Id(Long reasonId) {
+        return postRepository.findByCategory_Id(reasonId);
+    }
+
+    @Override
+    public Iterable<Post> findByPostType_Id(Long postTypeId) {
+        return postRepository.findByPostType_Id(postTypeId);
+    }
+
+    @Override
+    public Iterable<Post> findByRegion_Id(Long regionId) {
+        return postRepository.findByRegion_Id(regionId);
+    }
+
 }
