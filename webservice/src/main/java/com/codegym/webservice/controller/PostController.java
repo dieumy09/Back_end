@@ -172,7 +172,7 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{id}/block}")
+    @PostMapping("/{id}/block}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     public ResponseEntity<Object> blockPost(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -185,7 +185,7 @@ public class PostController {
         }
     }
 
-    @PostMapping(value = "/{id}/unblock}")
+    @PostMapping("/{id}/unblock}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     public ResponseEntity<Object> unblockPost(@PathVariable Long id) {
         Post post = postService.findById(id);
