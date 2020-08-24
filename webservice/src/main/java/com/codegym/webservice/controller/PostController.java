@@ -172,7 +172,7 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/block}")
+    @PostMapping("/{id}/block")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     public ResponseEntity<Object> blockPost(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -185,7 +185,7 @@ public class PostController {
         }
     }
 
-    @PostMapping("/{id}/unblock}")
+    @PostMapping("/{id}/unblock")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     public ResponseEntity<Object> unblockPost(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -196,6 +196,11 @@ public class PostController {
             postService.save(post);
             return new ResponseEntity<>(new ApiResponse(true, "Unblock post successfully!"), HttpStatus.OK);
         }
+    }
+
+    @PostMapping("/{id}/test")
+    public ResponseEntity<Object> test(@PathVariable Long id) {
+        return ResponseEntity.ok().body("OK" + id);
     }
 
 }
