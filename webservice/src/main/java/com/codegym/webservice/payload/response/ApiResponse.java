@@ -1,4 +1,4 @@
-package com.codegym.webservice.payload;
+package com.codegym.webservice.payload.response;
 
 public class ApiResponse {
     private Boolean success;

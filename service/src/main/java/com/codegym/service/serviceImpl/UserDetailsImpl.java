@@ -1,7 +1,6 @@
 package com.codegym.service.serviceImpl;
 
 import com.codegym.dao.model.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,28 +11,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
+
     private static final long serialVersionUID = 1L;
 
-    private Long id;
-
-
-
-
-    private String email;
-
-    @JsonIgnore
-    private String password;
-    private String name;
+    private User user;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String password,String name,
+    public UserDetailsImpl(User user,
                            Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-
-        this.email = email;
-        this.password = password;
-        this.name = name;
+        this.user = user;
         this.authorities = authorities;
 
     }
@@ -44,10 +31,7 @@ public class UserDetailsImpl implements UserDetails {
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-                user.getId(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getName(),
+                user,
                 authorities);
     }
 
@@ -57,29 +41,22 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public Long getId() {
-        return id;
+        return user.getId();
     }
 
     public String getEmail() {
-        return email;
+        return user.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public String getUsername() {
-        return email;
+        return user.getEmail();
     }
 
 
@@ -90,7 +67,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isStatus();
     }
 
     @Override
@@ -100,11 +77,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isStatus();
     }
 
     public String getName() {
-        return name;
+        return user.getName();
     }
 
 
@@ -115,6 +92,6 @@ public class UserDetailsImpl implements UserDetails {
         if (o == null || getClass() != o.getClass())
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(user.getId(), user.user.getId());
     }
 }

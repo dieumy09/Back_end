@@ -2,12 +2,16 @@ package com.codegym.service;
 
 
 import com.codegym.dao.model.Category;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 public interface CategoryService {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void save(Category category);
     List<Category> findAll();
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     Category findById(Long id);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void deleteById(Long id);
 }

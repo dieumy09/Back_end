@@ -6,27 +6,26 @@ import com.codegym.dao.model.ERole;
 import com.codegym.dao.model.Role;
 import com.codegym.dao.model.User;
 import com.codegym.dao.repository.RoleRepository;
-import com.codegym.dao.repository.UserRepository;
+import com.codegym.service.UserService;
 import com.codegym.service.serviceImpl.UserDetailsImpl;
-import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.response.ApiResponse;
 import com.codegym.webservice.payload.request.SignInRequest;
 import com.codegym.webservice.payload.request.SignUpRequest;
 import com.codegym.webservice.payload.response.JwtResponse;
 import com.codegym.webservice.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +38,7 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -51,18 +50,18 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody SignInRequest userDetailslogin) {
+    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody SignInRequest signInRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDetailslogin.getEmail(), userDetailslogin.getPassword()));
+                new UsernamePasswordAuthenticationToken(signInRequest.getEmail(), signInRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken((UserDetails) authentication.getPrincipal());
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+        Set<Role> roles = userDetails.getAuthorities().stream()
+                .map(item -> roleRepository.findByRoleName(ERole.valueOf(item.getAuthority())).get())
+                .collect(Collectors.toSet());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
@@ -72,8 +71,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    public ResponseEntity<Object> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+        if (userService.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already taken!"));
@@ -90,8 +89,8 @@ public class AuthController {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleRepository.findByRoleNameIs(ERole.ROLE_USER);
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            Role userRole = roleRepository.findByRoleName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
@@ -111,9 +110,21 @@ public class AuthController {
         }
 
         user.setRoles(roles);
-        userRepository.save(user);
+        userService.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Object> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.badRequest().body(new ApiResponse(false,"You are not signing!"));
+        }
+        User currentUser = userService.findByEmail(userDetails.getUsername());
+        return ResponseEntity.ok().body(currentUser);
+    }
+
 
 }

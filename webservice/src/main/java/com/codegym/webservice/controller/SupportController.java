@@ -2,7 +2,7 @@ package com.codegym.webservice.controller;
 
 import com.codegym.dao.model.Support;
 import com.codegym.service.SupportService;
-import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
