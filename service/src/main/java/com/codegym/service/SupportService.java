@@ -12,4 +12,6 @@ public interface SupportService {
     void save(Support support);
 
     void deleteById(Long id);
+
+    Page<Support> findByReasonId(Long reasonId, Pageable pageable);
 }

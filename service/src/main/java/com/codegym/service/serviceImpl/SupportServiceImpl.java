@@ -37,5 +37,10 @@ public class SupportServiceImpl implements SupportService {
         supportRepository.deleteById(id);
     }
 
+    @Override
+    public Page<Support> findByReasonId(Long reasonId, Pageable pageable) {
+        return supportRepository.getSupportsByReason_Id(reasonId, pageable);
+    }
+
 
 }

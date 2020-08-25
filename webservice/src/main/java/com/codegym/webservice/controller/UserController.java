@@ -5,10 +5,10 @@ import com.codegym.dao.model.Post;
 import com.codegym.dao.model.User;
 import com.codegym.service.PostService;
 import com.codegym.service.UserService;
-import com.codegym.webservice.payload.ApiResponse;
-import com.codegym.webservice.payload.BlockUserRequest;
+import com.codegym.webservice.payload.response.ApiResponse;
+import com.codegym.webservice.payload.request.BlockUserRequest;
 import com.codegym.webservice.payload.ChangePasswordToken;
-import com.codegym.webservice.payload.UserSearchRequest;
+import com.codegym.webservice.payload.request.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     private PasswordEncoder encoder;
-    
+
     @Autowired
     public void setEncoder(PasswordEncoder encoder) {
         this.encoder = encoder;
@@ -52,11 +53,13 @@ public class UserController {
     //-------------------Get All Users--------------------------------------------------------
 
     @GetMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findAllUsers(Pageable pageable) {
         return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
     }
 
     //-------------------Get One User By Id--------------------------------------------------------
+
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> findUserById(@PathVariable("id") Long id) {
@@ -138,20 +141,19 @@ public class UserController {
 
     @GetMapping("/{id}/posts")
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
-        Page<Post> posts = null;
-
+        Page<Post> posts;
         User user = userService.findById(id);
         if (user == null) {
             return new ResponseEntity<>(new ApiResponse(false, NOT_FOUND_USER), HttpStatus.NOT_FOUND);
         }
         if (search != null) {
             posts = postService.findPostsByUser_IdAndTitleContaining(id, search, pageable);
-        }
-        else {
+        } else {
             posts = postService.findPostsByUserId(id, pageable);
         }
-        return new ResponseEntity<>(posts,HttpStatus.OK);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
+
 
     @PostMapping("/{id}/block")
     public ResponseEntity<Object> blockUserById(@PathVariable Long id, @RequestBody BlockUserRequest blockUserRequest) {
@@ -178,7 +180,7 @@ public class UserController {
 
 
     @PostMapping("/search")
-    public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault() Pageable pageable) {
+    public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault(size = 10) Pageable pageable) {
         return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +53,7 @@ public class PostServiceImpl implements PostService {
                         .and(PostSpecification.hasPostTypeId(postTypeId))
                         .and(PostSpecification.hasCondition(condition))
                         .and(PostSpecification.hasArea(area))
-                        .and(PostSpecification.hasPice(price))
+                        .and(PostSpecification.hasPrice(price))
                         .and(PostSpecification.hasDeal(deal))
                         .and(PostSpecification.hasDirectionId(directionId))
                         .and(PostSpecification.isApproved(true))
@@ -76,4 +77,35 @@ public class PostServiceImpl implements PostService {
     public List<Post> findByViewCount() {
         return postRepository.findByViewCount();
     }
+    @Override
+    public Page<Post> findPendingPosts(String keyword, Pageable pageable) {
+        return postRepository.findAll(
+                Specification.where(PostSpecification.isApproved(false))
+                .and(PostSpecification.textInAllColumns(keyword, Arrays.asList("title", "content")))
+                , pageable);
+    }
+
+    @Override
+    public Page<Post> searchApprovedPosts(String keyword, Pageable pageable) {
+        return postRepository.findAll(
+                Specification.where(PostSpecification.isApproved(true))
+                        .and(PostSpecification.textInAllColumns(keyword, Arrays.asList("title", "content")))
+                , pageable);
+    }
+
+    @Override
+    public Iterable<Post> findByCategory_Id(Long reasonId) {
+        return postRepository.findByCategory_Id(reasonId);
+    }
+
+    @Override
+    public Iterable<Post> findByPostType_Id(Long postTypeId) {
+        return postRepository.findByPostType_Id(postTypeId);
+    }
+
+    @Override
+    public Iterable<Post> findByRegion_Id(Long regionId) {
+        return postRepository.findByRegion_Id(regionId);
+    }
+
 }
