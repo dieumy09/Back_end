@@ -4,6 +4,8 @@ import com.codegym.dao.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface PostService {
     Page<Post> findAll(Pageable pageable);
     Post findById(Long id);
@@ -25,4 +27,5 @@ public interface PostService {
             String direction
     );
     Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
+    List<Post> findByViewCount();
 }
