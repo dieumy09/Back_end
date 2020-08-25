@@ -38,14 +38,12 @@ public class PostController {
     }
 
     //-------------------Get All Posts--------------------------------------------------------
-
     @GetMapping
     public ResponseEntity<Object> findAllPosts(Pageable pageable) {
         return new ResponseEntity<>(postService.findAll(pageable), HttpStatus.OK);
     }
 
-    //-------------------Get One Post By User Id--------------------------------------------------------
-
+    //-------------------Get Posts By UserId--------------------------------------------------------
     @GetMapping(value = "/user/{userId}")
     public ResponseEntity<Object> findPostsByUserId(@PageableDefault(value = 5) Pageable pageable, @PathVariable Long userId) {
         User user = userService.findById(userId);
@@ -56,7 +54,6 @@ public class PostController {
     }
 
     //-------------------Get One Post By Id--------------------------------------------------------
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> findPostById(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -156,6 +153,12 @@ public class PostController {
                 direction
         );
         return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    //-------------------Get top 10 Post By ViewCount--------------------------------------------------------
+    @GetMapping(value = "/mostViewCount")
+    public ResponseEntity<Object> findByViewCount() {
+        return new ResponseEntity<>(postService.findByViewCount(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/searchPending")

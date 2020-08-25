@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+
 public interface PostService {
     Page<Post> findAll(Pageable pageable);
 
@@ -35,6 +37,8 @@ public interface PostService {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
+
+    List<Post> findByViewCount();
 
     Iterable<Post> findByCategory_Id(Long categoryId);
 
