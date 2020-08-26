@@ -4,9 +4,8 @@ import com.codegym.dao.model.Post;
 import com.codegym.dao.model.User;
 import com.codegym.service.PostService;
 import com.codegym.service.UserService;
-import com.codegym.webservice.payload.ApiResponse;
-import com.codegym.webservice.payload.PostSearchByYearRequest;
-import com.codegym.webservice.payload.PostSearchRequest;
+import com.codegym.webservice.payload.response.ApiResponse;
+import com.codegym.webservice.payload.request.PostSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,14 +38,12 @@ public class PostController {
     }
 
     //-------------------Get All Posts--------------------------------------------------------
-
     @GetMapping
     public ResponseEntity<Object> findAllPosts(Pageable pageable) {
         return new ResponseEntity<>(postService.findAll(pageable), HttpStatus.OK);
     }
 
-    //-------------------Get One Post By User Id--------------------------------------------------------
-
+    //-------------------Get Posts By UserId--------------------------------------------------------
     @GetMapping(value = "/user/{userId}")
     public ResponseEntity<Object> findPostsByUserId(@PageableDefault(value = 5) Pageable pageable, @PathVariable Long userId) {
         User user = userService.findById(userId);
@@ -56,7 +54,6 @@ public class PostController {
     }
 
     //-------------------Get One Post By Id--------------------------------------------------------
-
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> findPostById(@PathVariable Long id) {
         Post post = postService.findById(id);
@@ -157,4 +154,56 @@ public class PostController {
         );
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
+
+    //-------------------Get top 10 Post By ViewCount--------------------------------------------------------
+    @GetMapping(value = "/mostViewCount")
+    public ResponseEntity<Object> findByViewCount() {
+        return new ResponseEntity<>(postService.findByViewCount(), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/searchPending")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
+    public ResponseEntity<Object> searchPendingPosts(@PageableDefault(size = 10) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+        Page<Post> posts = postService.findPendingPosts(postSearchRequest.getKeyword(), pageable);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/searchApproved")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
+    public ResponseEntity<Object> searchApprovedPosts(@PageableDefault(size = 10) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+        Page<Post> posts = postService.searchApprovedPosts(postSearchRequest.getKeyword(), pageable);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/block")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
+    public ResponseEntity<Object> blockPost(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        if (post == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this post!"), HttpStatus.NOT_FOUND);
+        } else {
+            post.setStatus(false);
+            postService.save(post);
+            return new ResponseEntity<>(new ApiResponse(true, "Block post successfully!"), HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/{id}/unblock")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
+    public ResponseEntity<Object> unblockPost(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        if (post == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this post!"), HttpStatus.NOT_FOUND);
+        } else {
+            post.setStatus(true);
+            postService.save(post);
+            return new ResponseEntity<>(new ApiResponse(true, "Unblock post successfully!"), HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/{id}/test")
+    public ResponseEntity<Object> test(@PathVariable Long id) {
+        return ResponseEntity.ok().body("OK" + id);
+    }
+
 }

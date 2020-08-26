@@ -3,13 +3,18 @@ package com.codegym.service;
 import com.codegym.dao.model.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 public interface PostService {
     Page<Post> findAll(Pageable pageable);
 
     Post findById(Long id);
+    @PreAuthorize("hasRole('ROLE_USER')")
 
     void save(Post post);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
 
     void deleteById(Long id);
 
@@ -30,11 +35,18 @@ public interface PostService {
             String direction
     );
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     Page<Post> findPostsByUser_IdAndTitleContaining(Long userId, String title, Pageable pageable);
+
+    List<Post> findByViewCount();
 
     Iterable<Post> findByCategory_Id(Long categoryId);
 
     Iterable<Post> findByPostType_Id(Long postTypeId);
 
     Iterable<Post> findByRegion_Id(Long regionId);
+
+    Page<Post> findPendingPosts(String keyword, Pageable pageable);
+
+    Page<Post> searchApprovedPosts(String keyword, Pageable pageable);
 }

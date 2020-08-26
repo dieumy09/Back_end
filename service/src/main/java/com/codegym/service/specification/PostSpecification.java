@@ -47,7 +47,7 @@ public class PostSpecification {
         };
     }
 
-    public static Specification<Post> hasPice(Long price) {
+    public static Specification<Post> hasPrice(Long price) {
         return (root, query, criteriaBuilder) -> {
             if (price == null)
                 return criteriaBuilder.conjunction();

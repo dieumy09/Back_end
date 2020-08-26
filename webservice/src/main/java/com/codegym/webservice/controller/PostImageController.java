@@ -2,9 +2,8 @@ package com.codegym.webservice.controller;
 
 import com.codegym.dao.model.PostImage;
 import com.codegym.service.PostImageService;
-import com.codegym.webservice.payload.ApiResponse;
+import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

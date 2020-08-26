@@ -1,4 +1,4 @@
-package com.codegym.webservice.payload;
+package com.codegym.webservice.payload.request;
 
 
 public class PostSearchRequest {
