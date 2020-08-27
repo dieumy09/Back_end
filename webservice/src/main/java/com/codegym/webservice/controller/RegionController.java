@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -54,6 +55,7 @@ public class RegionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createRegion(@RequestBody Region region) {
         regionService.save(region);
         URI location = ServletUriComponentsBuilder
@@ -65,6 +67,7 @@ public class RegionController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateRegion(@PathVariable Long id, @RequestBody Region region) {
         region.setId(id);
         if (regionService.findById(id) == null) {
@@ -80,6 +83,7 @@ public class RegionController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteRegion(@PathVariable Long id) {
         Region region = regionService.findById(id);
         Iterable<Post> posts = postService.findByRegion_Id(id);
