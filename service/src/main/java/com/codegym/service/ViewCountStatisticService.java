@@ -2,6 +2,7 @@ package com.codegym.service;
 
 import com.codegym.dao.model.ViewCountStatistic;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ViewCountStatisticService {
@@ -9,6 +10,6 @@ public interface ViewCountStatisticService {
     List<ViewCountStatistic> findAll();
     ViewCountStatistic findById(Long id);
     void delete(Long id);
-    ViewCountStatistic findLastViewCountStatistic();
-    List<ViewCountStatistic> getListViewCountStatistic(String startDay, String endDay);
+    ViewCountStatistic findLastViewCountStatistic(Long postId);
+    List<ViewCountStatistic> getListViewCountStatistic(Date startDay, Date endDay);
 }

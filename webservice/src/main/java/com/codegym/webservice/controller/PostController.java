@@ -161,6 +161,28 @@ public class PostController {
         return new ResponseEntity<>(postService.findByViewCount(), HttpStatus.OK);
     }
 
+    //-------------------Update post-viewCount--------------------------------------------------------
+    @PatchMapping(value = "/update-post-viewCount/{id}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Object> updatePostViewCount(@PathVariable Long id, @Valid @RequestBody Post post) {
+//        Post post = postService.findById(id);
+        post.setId(id);
+        if (postService.findById(id) == null) {
+            return new ResponseEntity<>(new ApiResponse(false, "Can not find this post!"), HttpStatus.NOT_FOUND);
+        }
+        Long viewCount = post.getViewCount() + 1;
+        post.setViewCount(viewCount);
+        postService.save(post);
+//        postService.updatePostViewCount(viewCount, id);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(post.getId()).toUri();
+        return ResponseEntity.created(location)
+                .body(post);
+//        return new ResponseEntity<>(new ApiResponse(true, "Update post view count successfully!"), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/searchPending")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     public ResponseEntity<Object> searchPendingPosts(@PageableDefault(size = 10) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {

@@ -58,9 +58,9 @@ public class ViewCountStatisticController {
     }
 
     //-------------------Get Last ViewCountStatistic--------------------------------------------------------
-    @GetMapping(value = "/lastViewCountStatistic")
-    public ResponseEntity<Object> findLastViewCountStatistic() {
-        return new ResponseEntity<>(viewCountStatisticService.findLastViewCountStatistic(), HttpStatus.OK);
+    @GetMapping(value = "/lastViewCountStatistic/{postId}")
+    public ResponseEntity<Object> findLastViewCountStatistic(@PathVariable Long postId) {
+        return new ResponseEntity<>(viewCountStatisticService.findLastViewCountStatistic(postId), HttpStatus.OK);
     }
 
     //-------------------Get List ViewCountStatistic--------------------------------------------------------

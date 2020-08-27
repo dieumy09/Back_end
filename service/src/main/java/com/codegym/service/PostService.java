@@ -49,4 +49,6 @@ public interface PostService {
     Page<Post> findPendingPosts(String keyword, Pageable pageable);
 
     Page<Post> searchApprovedPosts(String keyword, Pageable pageable);
+
+    void updatePostViewCount(Long viewCount, Long postId);
 }

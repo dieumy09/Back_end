@@ -94,6 +94,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void updatePostViewCount(Long viewCount, Long postId) {
+        postRepository.updatePostViewCount(viewCount, postId);
+    }
+
+    @Override
     public Iterable<Post> findByCategory_Id(Long reasonId) {
         return postRepository.findByCategory_Id(reasonId);
     }
