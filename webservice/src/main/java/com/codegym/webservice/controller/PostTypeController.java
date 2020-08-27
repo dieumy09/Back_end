@@ -8,6 +8,7 @@ import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -47,6 +48,7 @@ public class PostTypeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createPostType(@RequestBody PostType postType) {
         postTypeService.save(postType);
         URI location = ServletUriComponentsBuilder
@@ -58,6 +60,7 @@ public class PostTypeController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updatePostType(@PathVariable Long id, @RequestBody PostType postType) {
         postType.setId(id);
         if (postTypeService.findById(id) == null) {
@@ -73,6 +76,7 @@ public class PostTypeController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deletePostType(@PathVariable Long id) {
         PostType postType = postTypeService.findById(id);
         Iterable<Post> posts = postService.findByPostType_Id(id);

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -43,6 +44,7 @@ public class CommentController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> createComment(@RequestBody Comment comment) {
         commentService.save(comment);
         URI location = ServletUriComponentsBuilder
@@ -54,6 +56,7 @@ public class CommentController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> updateComment(@PathVariable Long id, @RequestBody Comment comment) {
         comment.setId(id);
         if (commentService.findById(id) == null) {
@@ -69,6 +72,7 @@ public class CommentController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> deleteComment(@PathVariable Long id) {
         commentService.deleteById(id);
         return new ResponseEntity<>(new ApiResponse(true, "Delete repository successfully!"), HttpStatus.OK);

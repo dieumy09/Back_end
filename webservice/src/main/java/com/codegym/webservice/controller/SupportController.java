@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +32,7 @@ public class SupportController {
     //-------------------Get Supports--------------------------------------------------------
 
     @GetMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findAllSupports(@RequestParam Long reasonId, @PageableDefault(size = 5) Pageable pageable){
         Page<Support> supports = null;
         if (reasonId == null) {
@@ -45,6 +47,7 @@ public class SupportController {
     //-------------------Get One Support By Id--------------------------------------------------------
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findSupportById(@PathVariable("id")Long id){
         Support support = supportService.findById(id);
         if (support == null){
@@ -68,6 +71,7 @@ public class SupportController {
 
     //-------------------Update a Support--------------------------------------------------------
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateSupport(@PathVariable Long id, @RequestBody Support support) {
         support.setId(id);
         if (supportService.findById(id) == null) {
@@ -85,6 +89,7 @@ public class SupportController {
     //-------------------Delete a Support--------------------------------------------------------
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteSupport(@PathVariable("id") Long id){
         Support support = supportService.findById(id);
         if (support == null){

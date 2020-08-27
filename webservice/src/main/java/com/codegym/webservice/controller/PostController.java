@@ -45,6 +45,7 @@ public class PostController {
 
     //-------------------Get Posts By UserId--------------------------------------------------------
     @GetMapping(value = "/user/{userId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> findPostsByUserId(@PageableDefault(value = 5) Pageable pageable, @PathVariable Long userId) {
         User user = userService.findById(userId);
         if (user == null) {
@@ -66,6 +67,7 @@ public class PostController {
 
     //-------------------Create a Post--------------------------------------------------------
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> createPost(@RequestBody Post post) {
         postService.save(post);
         URI location = ServletUriComponentsBuilder
@@ -94,6 +96,7 @@ public class PostController {
 
     //-------------------Delete a Post by id--------------------------------------------------------
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
         Post post = postService.findById(id);
         if (post == null){
@@ -157,6 +160,7 @@ public class PostController {
 
     //-------------------Get top 10 Post By ViewCount--------------------------------------------------------
     @GetMapping(value = "/mostViewCount")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findByViewCount() {
         return new ResponseEntity<>(postService.findByViewCount(), HttpStatus.OK);
     }
@@ -199,11 +203,6 @@ public class PostController {
             postService.save(post);
             return new ResponseEntity<>(new ApiResponse(true, "Unblock post successfully!"), HttpStatus.OK);
         }
-    }
-
-    @PostMapping("/{id}/test")
-    public ResponseEntity<Object> test(@PathVariable Long id) {
-        return ResponseEntity.ok().body("OK" + id);
     }
 
 }
