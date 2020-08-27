@@ -7,6 +7,7 @@ import com.codegym.service.SupportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,11 +32,13 @@ public class ReasonController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findAllReasons() {
         return new ResponseEntity<>(reasonService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findReasonById(@PathVariable Long id) {
         Reason reason = reasonService.findById(id);
         if (reason == null) {
@@ -56,6 +59,7 @@ public class ReasonController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateReason(@PathVariable Long id, @RequestBody Reason reason) {
         reason.setId(id);
         if (reasonService.findById(id) == null) {
@@ -71,6 +75,7 @@ public class ReasonController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteReason(@PathVariable Long id) {
         reasonService.delete(id);
         return new ResponseEntity<>(new ApiResponse(true, "Delete reason successfully!"), HttpStatus.OK);

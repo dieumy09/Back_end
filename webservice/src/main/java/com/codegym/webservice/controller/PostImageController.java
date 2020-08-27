@@ -6,6 +6,7 @@ import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,6 +38,7 @@ public class PostImageController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> createPostImage(@RequestBody PostImage postImage) {
         postImageService.save(postImage);
         URI location = ServletUriComponentsBuilder
@@ -48,6 +50,7 @@ public class PostImageController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> updatePostImage(@PathVariable Long id, @RequestBody PostImage postImage) {
         postImage.setId(id);
         if (postImageService.findById(id) == null) {
@@ -63,6 +66,7 @@ public class PostImageController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> deletePostImage(@PathVariable Long id) {
 //        PostImage postImage = postImageService.findById(id);
 //        if (postImage == null){

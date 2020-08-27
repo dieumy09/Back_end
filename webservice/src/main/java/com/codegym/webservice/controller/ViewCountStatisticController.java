@@ -7,6 +7,7 @@ import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +26,7 @@ public class ViewCountStatisticController {
 
     //-------------------Get All ViewCountStatistic--------------------------------------------------------
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findAllViewCountStatistic() {
         return new ResponseEntity<>(viewCountStatisticService.findAll(), HttpStatus.OK);
     }
@@ -43,6 +45,7 @@ public class ViewCountStatisticController {
 
     //-------------------Update a ViewCountStatistic by id--------------------------------------------------------
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateViewCountStatistic(@PathVariable Long id, @RequestBody ViewCountStatistic viewCountStatistic) {
         viewCountStatistic.setId(id);
         if (viewCountStatisticService.findById(id) == null) {
@@ -59,12 +62,14 @@ public class ViewCountStatisticController {
 
     //-------------------Get Last ViewCountStatistic--------------------------------------------------------
     @GetMapping(value = "/lastViewCountStatistic")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findLastViewCountStatistic() {
         return new ResponseEntity<>(viewCountStatisticService.findLastViewCountStatistic(), HttpStatus.OK);
     }
 
     //-------------------Get List ViewCountStatistic--------------------------------------------------------
     @PostMapping(value = "/listViewCountStatistic")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getListViewCountStatistic(@RequestBody DateStatisticDTO date) {
         return new ResponseEntity<>(viewCountStatisticService.getListViewCountStatistic(date.getStartDay(), date.getEndDay()), HttpStatus.OK);
     }
