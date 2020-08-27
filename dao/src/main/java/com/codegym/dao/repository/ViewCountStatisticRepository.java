@@ -1,6 +1,5 @@
 package com.codegym.dao.repository;
 
-import com.codegym.dao.model.Post;
 import com.codegym.dao.model.ViewCountStatistic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +12,10 @@ public interface ViewCountStatisticRepository extends JpaRepository<ViewCountSta
             nativeQuery = true)
     ViewCountStatistic findLastViewCountStatistic(Long postId);
 
-    @Query(value = "select * from real_estate.view_count_statistic where date_statistic between ?1 and ?2",
+    @Query(value = "select DATE_FORMAT(date_statistic, '%d/%m/%Y') as date, sum(view_count) as total_view  \n" +
+            "from real_estate.view_count_statistic\n" +
+            "where date_statistic between ?1 and ?2 \n" +
+            "group by date",
             nativeQuery = true)
-    List<ViewCountStatistic> getListViewCountStatistic(Date startDay, Date endDay);
+    List getListViewCountStatistic(Date startDay, Date endDay);
 }

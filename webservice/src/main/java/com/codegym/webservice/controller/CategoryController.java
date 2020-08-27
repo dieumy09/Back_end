@@ -6,8 +6,11 @@ import com.codegym.service.CategoryService;
 import com.codegym.webservice.payload.response.ApiResponse;
 import com.codegym.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,6 +39,11 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/pages")
+    public ResponseEntity<Object> findAllCategories(@PageableDefault(size = 5) Pageable pageable) {
+        return new ResponseEntity<>(categoryService.findAll(pageable), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> findRepositoryById(@PathVariable Long id) {
         Category category = categoryService.findById(id);
@@ -47,6 +55,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createCategory(@RequestBody Category category) {
         categoryService.save(category);
         URI location = ServletUriComponentsBuilder
@@ -58,6 +67,7 @@ public class CategoryController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateCategory(@PathVariable Long id, @RequestBody Category category) {
         category.setId(id);
         if (categoryService.findById(id) == null) {
@@ -73,6 +83,7 @@ public class CategoryController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteCategory(@PathVariable Long id) {
         Category category = categoryService.findById(id);
         Iterable<Post> posts = postService.findByCategory_Id(id);

@@ -45,7 +45,7 @@ public class ViewCountStatisticServiceImpl implements ViewCountStatisticService 
     }
 
     @Override
-    public List<ViewCountStatistic> getListViewCountStatistic(Date startDay, Date endDay) {
+    public List getListViewCountStatistic(Date startDay, Date endDay) {
         return viewCountStatisticRepository.getListViewCountStatistic(startDay, endDay);
     }
 }

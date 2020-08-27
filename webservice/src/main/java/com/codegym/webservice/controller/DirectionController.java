@@ -6,6 +6,7 @@ import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,6 +38,7 @@ public class DirectionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createDirection(@RequestBody Direction direction) {
         directionService.save(direction);
         URI location = ServletUriComponentsBuilder
@@ -48,6 +50,7 @@ public class DirectionController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateDirection(@PathVariable Long id, @RequestBody Direction direction) {
         direction.setId(id);
         if (directionService.findById(id) == null) {
@@ -63,6 +66,7 @@ public class DirectionController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteDirection(@PathVariable Long id) {
         directionService.deleteById(id);
         return new ResponseEntity<>(new ApiResponse(true, "Delete direction successfully!"), HttpStatus.OK);

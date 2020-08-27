@@ -7,6 +7,7 @@ import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +26,7 @@ public class ViewCountStatisticController {
 
     //-------------------Get All ViewCountStatistic--------------------------------------------------------
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> findAllViewCountStatistic() {
         return new ResponseEntity<>(viewCountStatisticService.findAll(), HttpStatus.OK);
     }
@@ -65,6 +67,7 @@ public class ViewCountStatisticController {
 
     //-------------------Get List ViewCountStatistic--------------------------------------------------------
     @PostMapping(value = "/listViewCountStatistic")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> getListViewCountStatistic(@RequestBody DateStatisticDTO date) {
         return new ResponseEntity<>(viewCountStatisticService.getListViewCountStatistic(date.getStartDay(), date.getEndDay()), HttpStatus.OK);
     }

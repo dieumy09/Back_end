@@ -6,8 +6,11 @@ import com.codegym.service.PostService;
 import com.codegym.service.PostTypeService;
 import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,6 +39,11 @@ public class PostTypeController {
         return new ResponseEntity<>(postTypeService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/pages")
+    public ResponseEntity<Object> findAllPostType(@PageableDefault(size = 5) Pageable pageable) {
+        return new ResponseEntity<>(postTypeService.findAll(pageable), HttpStatus.OK);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> findPostTypeById(@PathVariable Long id) {
         PostType postType = postTypeService.findById(id);
@@ -47,6 +55,7 @@ public class PostTypeController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createPostType(@RequestBody PostType postType) {
         postTypeService.save(postType);
         URI location = ServletUriComponentsBuilder
@@ -58,6 +67,7 @@ public class PostTypeController {
     }
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updatePostType(@PathVariable Long id, @RequestBody PostType postType) {
         postType.setId(id);
         if (postTypeService.findById(id) == null) {
@@ -73,6 +83,7 @@ public class PostTypeController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deletePostType(@PathVariable Long id) {
         PostType postType = postTypeService.findById(id);
         Iterable<Post> posts = postService.findByPostType_Id(id);
