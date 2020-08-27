@@ -11,11 +11,11 @@ public interface PostService {
     Page<Post> findAll(Pageable pageable);
 
     Post findById(Long id);
+
     @PreAuthorize("hasRole('ROLE_USER')")
-
     void save(Post post);
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     void deleteById(Long id);
 
     Page<Post> findPostsByUserId(Long userId, Pageable pageable);
@@ -46,7 +46,8 @@ public interface PostService {
 
     Iterable<Post> findByRegion_Id(Long regionId);
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     Page<Post> findPendingPosts(String keyword, Pageable pageable);
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     Page<Post> searchApprovedPosts(String keyword, Pageable pageable);
 }

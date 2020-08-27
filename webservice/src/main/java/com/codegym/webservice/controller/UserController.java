@@ -73,6 +73,7 @@ public class UserController {
     //-------------------Create a User--------------------------------------------------------
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         userService.save(user);
         URI location = ServletUriComponentsBuilder
@@ -86,6 +87,7 @@ public class UserController {
     //-------------------Update User Profile--------------------------------------------------------
 
     @PatchMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody User user) {
         User currentUser = userService.findById(id);
 
@@ -110,6 +112,7 @@ public class UserController {
     //-------------------Change User's Password--------------------------------------------------------
 
     @PatchMapping("/{id}/changePassword")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> changePassword(@PathVariable Long id, @RequestBody ChangePasswordToken changePasswordToken) {
         User user = userService.findById(id);
 
@@ -128,6 +131,7 @@ public class UserController {
     //-------------------Delete a User--------------------------------------------------------
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> deleteUser(@PathVariable("id") Long id) {
         User user = userService.findById(id);
         if (user == null) {
@@ -140,6 +144,7 @@ public class UserController {
     //-------------------Find Posts By UserId Pagination And Search--------------------------------------------------------
 
     @GetMapping("/{id}/posts")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Object> getPostsByUserId(@PathVariable("id") Long id, @PageableDefault(size = 5) Pageable pageable, @RequestParam("search") String search) {
         Page<Post> posts;
         User user = userService.findById(id);
@@ -156,6 +161,7 @@ public class UserController {
 
 
     @PostMapping("/{id}/block")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> blockUserById(@PathVariable Long id, @RequestBody BlockUserRequest blockUserRequest) {
         User user = userService.findById(id);
         if (user == null) {
@@ -169,6 +175,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/unblock")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> unblockUserById(@PathVariable Long id) {
         User user = userService.findById(id);
         if (user == null) {
@@ -180,6 +187,7 @@ public class UserController {
 
 
     @PostMapping("/search")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> searchUser(@RequestBody UserSearchRequest userSearchRequest, @PageableDefault(size = 10) Pageable pageable) {
         return new ResponseEntity<>(userService.searchUser(pageable, userSearchRequest.getKeyword()), HttpStatus.OK);
     }
