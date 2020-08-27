@@ -31,7 +31,7 @@ public class SupportController {
     //-------------------Get Supports--------------------------------------------------------
 
     @GetMapping()
-    public ResponseEntity<Object> findAllSupports(@RequestParam Long reasonId, @PageableDefault(size = 5) Pageable pageable){
+    public ResponseEntity<Object> findAllSupports(@RequestParam Long reasonId, @PageableDefault(size = 10) Pageable pageable){
         Page<Support> supports = null;
         if (reasonId == null) {
             supports = supportService.findAll(pageable);
