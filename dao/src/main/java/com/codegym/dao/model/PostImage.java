@@ -12,7 +12,7 @@ public class PostImage extends DateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "NVARCHAR(50)", nullable = false)
+    @Column(columnDefinition = "NVARCHAR(255)", nullable = false)
     private String image;
 
     @Column(columnDefinition = "TINYINT(1) default 1")

@@ -4,6 +4,8 @@ import com.codegym.dao.model.Region;
 import com.codegym.dao.repository.RegionRepository;
 import com.codegym.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,11 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public List<Region> findAll() {
         return regionRepository.findAll();
+    }
+
+    @Override
+    public Page<Region> findAll(Pageable pageable) {
+        return regionRepository.findAll(pageable);
     }
 
     @Override

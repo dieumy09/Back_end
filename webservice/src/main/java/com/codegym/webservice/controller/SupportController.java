@@ -65,8 +65,9 @@ public class SupportController {
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(support.getId()).toUri();
-        return ResponseEntity.created(location)
+        ResponseEntity<Object> body = ResponseEntity.created(location)
                 .body(support);
+        return body;
     }
 
     //-------------------Update a Support--------------------------------------------------------
