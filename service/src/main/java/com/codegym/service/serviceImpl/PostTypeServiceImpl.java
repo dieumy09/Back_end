@@ -4,6 +4,8 @@ import com.codegym.dao.model.PostType;
 import com.codegym.dao.repository.PostTypeRepository;
 import com.codegym.service.PostTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,11 @@ public class PostTypeServiceImpl implements PostTypeService {
     @Override
     public List<PostType> findAll() {
         return postTypeRepository.findAll();
+    }
+
+    @Override
+    public Page<PostType> findAll(Pageable pageable) {
+        return postTypeRepository.findAll(pageable);
     }
 
     @Override

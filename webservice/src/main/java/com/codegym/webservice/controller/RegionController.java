@@ -6,6 +6,8 @@ import com.codegym.service.PostService;
 import com.codegym.service.RegionService;
 import com.codegym.webservice.payload.response.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,11 @@ public class RegionController {
     @GetMapping
     public ResponseEntity<Object> findAllRegion() {
         return new ResponseEntity<>(regionService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<Object> findAllRegion(@PageableDefault(size = 5) Pageable pageable) {
+        return new ResponseEntity<>(regionService.findAll(pageable), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
