@@ -18,9 +18,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             nativeQuery = true)
     List<Post> findByViewCount();
 
-    @Query(value = "update real_estate.post set post.view_count = ?1 where post.id = ?2", nativeQuery = true)
-    void updatePostViewCount(Long viewCount, Long postId);
-
     Iterable<Post> findByCategory_Id(Long categoryId);
 
     Iterable<Post> findByPostType_Id(Long postTypeId);

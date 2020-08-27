@@ -94,8 +94,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updatePostViewCount(Long viewCount, Long postId) {
-        postRepository.updatePostViewCount(viewCount, postId);
+    public void updatePostViewCount(Post post) {
+        postRepository.save(post);
     }
 
     @Override

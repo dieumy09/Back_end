@@ -50,5 +50,5 @@ public interface PostService {
 
     Page<Post> searchApprovedPosts(String keyword, Pageable pageable);
 
-    void updatePostViewCount(Long viewCount, Long postId);
+    void updatePostViewCount(Post post);
 }
