@@ -50,4 +50,6 @@ public interface PostService {
     Page<Post> findPendingPosts(String keyword, Pageable pageable);
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
     Page<Post> searchApprovedPosts(String keyword, Pageable pageable);
+
+    void updatePostViewCount(Post post);
 }

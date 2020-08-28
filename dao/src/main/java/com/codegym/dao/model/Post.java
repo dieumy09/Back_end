@@ -9,7 +9,8 @@ import java.util.Set;
 @Entity
 @Table(name = "post")
 @JsonIgnoreProperties({
-        "comments"
+        "comments",
+        "viewCountStatistics"
 })
 public class Post extends DateAudit {
     @Id
@@ -40,6 +41,8 @@ public class Post extends DateAudit {
     @Column(columnDefinition = "TINYINT(1) default 0")
     private boolean deal = false;
 
+    @Column
+    @Min(0)
     private Long viewCount;
 
     @Column(columnDefinition = "TEXT")
@@ -84,10 +87,14 @@ public class Post extends DateAudit {
     @JsonManagedReference
     private Set<Comment> comments;
 
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<ViewCountStatistic> viewCountStatistics;
+
     public Post() {
     }
 
-    public Post(String title, boolean condition, String address, Double area, Long price, boolean deal, Long viewCount, String content, boolean status, boolean approved, boolean customerType, User user, PostType postType, Region region, Direction direction, Category category) {
+    public Post(@NotBlank @Size(max = 50) String title, boolean condition, @NotBlank @Size(max = 100) String address, @NotNull @Min(0) Double area, @NotNull @Min(0) Long price, boolean deal, @Min(0) Long viewCount, @NotBlank @Size(max = 65535) String content, boolean status, boolean approved, boolean customerType, User user, PostType postType, Region region, Direction direction, Category category, Set<PostImage> postImages, Set<Comment> comments, Set<ViewCountStatistic> viewCountStatistics) {
         this.title = title;
         this.condition = condition;
         this.address = address;
@@ -104,6 +111,9 @@ public class Post extends DateAudit {
         this.region = region;
         this.direction = direction;
         this.category = category;
+        this.postImages = postImages;
+        this.comments = comments;
+        this.viewCountStatistics = viewCountStatistics;
     }
 
     public Long getId() {
@@ -194,6 +204,14 @@ public class Post extends DateAudit {
         this.approved = approved;
     }
 
+    public boolean isCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(boolean customerType) {
+        this.customerType = customerType;
+    }
+
     public User getUser() {
         return user;
     }
@@ -250,11 +268,11 @@ public class Post extends DateAudit {
         this.comments = comments;
     }
 
-    public boolean isCustomerType() {
-        return customerType;
+    public Set<ViewCountStatistic> getViewCountStatistics() {
+        return viewCountStatistics;
     }
 
-    public void setCustomerType(boolean customerType) {
-        this.customerType = customerType;
+    public void setViewCountStatistics(Set<ViewCountStatistic> viewCountStatistics) {
+        this.viewCountStatistics = viewCountStatistics;
     }
 }
