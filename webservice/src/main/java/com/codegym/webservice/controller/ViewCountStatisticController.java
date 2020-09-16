@@ -45,7 +45,6 @@ public class ViewCountStatisticController {
 
     //-------------------Update a ViewCountStatistic by id--------------------------------------------------------
     @PatchMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateViewCountStatistic(@PathVariable Long id, @RequestBody ViewCountStatistic viewCountStatistic) {
         viewCountStatistic.setId(id);
         if (viewCountStatisticService.findById(id) == null) {
@@ -61,10 +60,9 @@ public class ViewCountStatisticController {
     }
 
     //-------------------Get Last ViewCountStatistic--------------------------------------------------------
-    @GetMapping(value = "/lastViewCountStatistic")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Object> findLastViewCountStatistic() {
-        return new ResponseEntity<>(viewCountStatisticService.findLastViewCountStatistic(), HttpStatus.OK);
+    @GetMapping(value = "/lastViewCountStatistic/{postId}")
+    public ResponseEntity<Object> findLastViewCountStatistic(@PathVariable Long postId) {
+        return new ResponseEntity<>(viewCountStatisticService.findLastViewCountStatistic(postId), HttpStatus.OK);
     }
 
     //-------------------Get List ViewCountStatistic--------------------------------------------------------

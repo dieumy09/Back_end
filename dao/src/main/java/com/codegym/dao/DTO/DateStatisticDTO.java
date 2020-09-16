@@ -1,30 +1,32 @@
 package com.codegym.dao.DTO;
 
+import java.util.Date;
+
 public class DateStatisticDTO {
-    private String startDay;
-    private String endDay;
+    private Date startDay;
+    private Date endDay;
 
     public DateStatisticDTO() {
     }
 
-    public DateStatisticDTO(String startDay, String endDay) {
+    public DateStatisticDTO(Date startDay, Date endDay) {
         this.startDay = startDay;
         this.endDay = endDay;
     }
 
-    public String getStartDay() {
+    public Date getStartDay() {
         return startDay;
     }
 
-    public void setStartDay(String startDay) {
+    public void setStartDay(Date startDay) {
         this.startDay = startDay;
     }
 
-    public String getEndDay() {
+    public Date getEndDay() {
         return endDay;
     }
 
-    public void setEndDay(String endDay) {
+    public void setEndDay(Date endDay) {
         this.endDay = endDay;
     }
 }

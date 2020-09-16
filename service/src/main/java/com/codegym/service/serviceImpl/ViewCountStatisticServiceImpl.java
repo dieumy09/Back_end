@@ -6,6 +6,7 @@ import com.codegym.service.ViewCountStatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -39,12 +40,12 @@ public class ViewCountStatisticServiceImpl implements ViewCountStatisticService 
     }
 
     @Override
-    public ViewCountStatistic findLastViewCountStatistic() {
-        return viewCountStatisticRepository.findLastViewCountStatistic();
+    public ViewCountStatistic findLastViewCountStatistic(Long postId) {
+        return viewCountStatisticRepository.findLastViewCountStatistic(postId);
     }
 
     @Override
-    public List<ViewCountStatistic> getListViewCountStatistic(String startDay, String endDay) {
+    public List getListViewCountStatistic(Date startDay, Date endDay) {
         return viewCountStatisticRepository.getListViewCountStatistic(startDay, endDay);
     }
 }
