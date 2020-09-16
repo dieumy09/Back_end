@@ -174,7 +174,7 @@ public class PostController {
 
     @PostMapping(value = "/searchApproved")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
-    public ResponseEntity<Object> searchApprovedPosts(@PageableDefault(size = 10) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+    public ResponseEntity<Object> searchApprovedPosts(@PageableDefault(size = 1) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
         Page<Post> posts = postService.searchApprovedPosts(postSearchRequest.getKeyword(), pageable);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
