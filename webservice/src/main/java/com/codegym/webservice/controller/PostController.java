@@ -166,10 +166,10 @@ public class PostController {
     }
 
     //-------------------Update post-viewCount--------------------------------------------------------
-    @PatchMapping(value = "/update-post-viewCount/{id}")
-    public ResponseEntity<Object> updatePostViewCount(@PathVariable Long id, @Valid @RequestBody Post post) {
-        post.setId(id);
-        if (postService.findById(id) == null) {
+    @GetMapping(value = "/update-post-viewCount/{id}")
+    public ResponseEntity<Object> updatePostViewCount(@PathVariable Long id) {
+        Post post = postService.findById(id);
+        if (post == null) {
             return new ResponseEntity<>(new ApiResponse(false, "Can not find this post!"), HttpStatus.NOT_FOUND);
         }
         postService.updatePostViewCount(post);
@@ -190,7 +190,7 @@ public class PostController {
 
     @PostMapping(value = "/searchApproved")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MOD')")
-    public ResponseEntity<Object> searchApprovedPosts(@PageableDefault(size = 1) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
+    public ResponseEntity<Object> searchApprovedPosts(@PageableDefault(size = 10) Pageable pageable, @RequestBody PostSearchRequest postSearchRequest) {
         Page<Post> posts = postService.searchApprovedPosts(postSearchRequest.getKeyword(), pageable);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
